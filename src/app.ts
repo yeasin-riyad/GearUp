@@ -3,7 +3,8 @@ import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import config from "./config";
 import { globalErrorHandler } from "./errors/globalErrorHandler";
-import { notFound } from "./middlewares/notfound";
+import { notFound } from "./middlewares/notFound";
+import { authRoutes } from "./modules/auth/auth.route";
 
 
 const app : Application = express();
@@ -26,6 +27,8 @@ app.get("/",(req : Request, res : Response) => {
     res.send("Hello from GearUp API");
 });
 
+// Routes
+app.use("/api/auth", authRoutes);
 
 
 // Global error handler
