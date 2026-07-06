@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import AppError from "./AppError";
 import { Prisma } from "../../generated/prisma/client";
+import jwt from "jsonwebtoken";
+
 
 export const globalErrorHandler = (
   err: unknown,
@@ -21,6 +23,18 @@ export const globalErrorHandler = (
     message = err.message;
     errorName = err.name;
   }
+
+  else if (err instanceof jwt.TokenExpiredError) {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = "Refresh token has expired. Please log in again.";
+    errorName = err.name;
+}
+
+else if (err instanceof jwt.JsonWebTokenError) {
+    statusCode = httpStatus.UNAUTHORIZED;
+    message = "Invalid token.";
+    errorName = err.name;
+}
 
   /**
    * Handle Prisma Validation Error
