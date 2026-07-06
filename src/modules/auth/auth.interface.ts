@@ -8,3 +8,8 @@ export type IUser = {
   avatar?: string;
   role: UserRole;
 };
+
+export interface ILoginUser {
+    email: string;
+    password: string;
+}
