@@ -175,8 +175,30 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const getMe = async (userId:string)=>{
+
+    return prisma.user.findUniqueOrThrow({
+        where:{
+            id:userId
+        },
+        select:{
+            id:true,
+            name:true,
+            email:true,
+            phone:true,
+            avatar:true,
+            role:true,
+            status:true,
+            createdAt:true,
+            lastLoginAt:true
+        }
+    })
+
+}
+
 export const authService = {
   registerUserIntoDB,
   loginUser,
-  refreshToken
+  refreshToken,
+  getMe
 };

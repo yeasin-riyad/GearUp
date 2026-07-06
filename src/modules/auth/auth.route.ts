@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {authController } from "./auth.controller";
+import auth from "../../middlewares/auth";
 
 const router = Router();
 
@@ -10,5 +11,15 @@ router.post(
     authController.refreshToken
 );
 
+router.post(
+    "/logout",
+    authController.logoutUser
+)
+
+router.get(
+  "/me",
+  auth(),
+  authController.getMe
+);
 
 export const authRoutes = router;
