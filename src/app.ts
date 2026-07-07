@@ -5,6 +5,7 @@ import config from "./config";
 import { globalErrorHandler } from "./errors/globalErrorHandler";
 import { notFound } from "./middlewares/notFound";
 import { authRoutes } from "./modules/auth/auth.route";
+import { categoryRoutes } from "./modules/category/category.route";
 
 
 const app : Application = express();
@@ -29,6 +30,7 @@ app.get("/",(req : Request, res : Response) => {
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/categories",categoryRoutes)
 
 
 // Global error handler

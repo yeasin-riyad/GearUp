@@ -1,7 +1,10 @@
 model Category {
-  id          String  @id @default(uuid())
+  id String @id @default(uuid())
+
   name        String  @unique
+  slug        String  @unique
   description String?
+  image       String?
 
   gearItems GearItem[]
 
