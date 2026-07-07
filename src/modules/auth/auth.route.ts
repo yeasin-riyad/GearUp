@@ -22,4 +22,16 @@ router.get(
   authController.getMe
 );
 
+router.patch(
+  "/profile",
+  auth(),
+  authController.updateProfile
+);
+
+router.patch(
+  "/change-password",
+  auth(),
+  authController.changePassword
+);
+
 export const authRoutes = router;

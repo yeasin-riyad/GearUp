@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import config from "../../config";
 import AppError from "../../errors/AppError";
-import { ILoginUser, IUser } from "./auth.interface";
+import { IChangePassword, ILoginUser, IUpdateProfile, IUser } from "./auth.interface";
 import { jwtUtils } from "../../utils/jwt";
 import { JwtPayload } from "jsonwebtoken";
 
@@ -170,9 +170,8 @@ const refreshToken = async (token: string) => {
     config.jwt_access_expires_in as any
   );
 
-  return {
-    accessToken,
-  };
+  return accessToken;
+  ;
 };
 
 const getMe = async (userId:string)=>{
@@ -196,9 +195,84 @@ const getMe = async (userId:string)=>{
 
 }
 
+const updateProfile = async (
+  userId: string,
+  payload: IUpdateProfile
+) => {
+ 
+
+  const updatedUser = await prisma.user.update({
+  where: {
+    id: userId,
+  },
+  data: payload,
+  select: {
+    id: true,
+    name: true,
+    email: true,
+    phone: true,
+    avatar: true,
+    address: true,
+    city: true,
+    role: true,
+    status: true,
+    lastLoginAt: true,
+    createdAt: true,
+    updatedAt: true,
+  },
+});
+
+return updatedUser;
+};
+
+
+const changePassword = async (
+  userId: string,
+  payload: IChangePassword
+) => {
+  const { oldPassword, newPassword } = payload;
+
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+  });
+
+  const isMatched = await bcrypt.compare(
+    oldPassword,
+    user.password
+  );
+
+  if (!isMatched) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Old password is incorrect."
+    );
+  }
+
+  const hashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.bcrypt_salt_rounds)
+  );
+
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      password: hashedPassword,
+      passwordChangedAt:new Date()
+    },
+  });
+
+  return null;
+};
+
 export const authService = {
   registerUserIntoDB,
   loginUser,
   refreshToken,
-  getMe
+  getMe,
+  updateProfile,
+  changePassword
 };

@@ -13,3 +13,16 @@ export interface ILoginUser {
     email: string;
     password: string;
 }
+
+export interface IChangePassword {
+  oldPassword: string;
+  newPassword: string;
+}
+
+export interface IUpdateProfile {
+  name?: string;
+  phone?: string;
+  avatar?: string;
+  address?:string;
+  city?:string
+}

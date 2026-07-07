@@ -111,10 +111,44 @@ const getMe = catchAsync(async (req, res) => {
         data:result
     })
 })
+
+
+const updateProfile = catchAsync(async (req, res) => {
+  // console.log(req.user.userId);
+  // console.log(req.body);
+  const result = await authService.updateProfile(
+    req.user.userId,
+    req.body
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Profile updated successfully",
+    data: result,
+  });
+});
+
+
+const changePassword = catchAsync(async (req, res) => {
+  await authService.changePassword(
+    req.user.userId,
+    req.body
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Password changed successfully",
+    data: null,
+  });
+});
 export const authController = {
   registerUser,
   loginUser,
   refreshToken,
   logoutUser,
-  getMe
+  getMe,
+  updateProfile,
+  changePassword
 };
