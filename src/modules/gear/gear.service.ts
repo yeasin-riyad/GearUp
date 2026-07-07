@@ -1,10 +1,10 @@
 import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import AppError from "../../errors/AppError";
-import { ICreateGear } from "./gear.interface";
+import { ICreateGear, IUpdateGear } from "./gear.interface";
 import QueryBuilder from "../../builder/QueryBuilder";
-import { Prisma } from "../../../generated/prisma/client";
-import { gearFilterableFields, gearSearchableFields, gearSelectableFields, gearSortableFields } from "./gear.constant";
+import { Prisma, UserRole } from "../../../generated/prisma/client";
+import { GEAR_MANAGEMENT_ROLES, gearFilterableFields, gearSearchableFields, gearSelectableFields, gearSortableFields } from "./gear.constant";
 
 const createGear = async (
   userId: string,
@@ -149,8 +149,125 @@ const getSingleGear = async (gearId: string) => {
   return gear;
 };
 
+
+
+const updateGear = async (
+  gearId: string,
+  userId: string,
+  role:UserRole,
+  payload: IUpdateGear
+) => {
+  const gear = await prisma.gearItem.findUnique({
+    where: {
+      id: gearId,
+    },
+  });
+
+  if (!gear) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Gear not found."
+    );
+  }
+
+  /**
+   * Authorization
+   */
+ const hasAccess =
+  GEAR_MANAGEMENT_ROLES.includes(role) ||
+  gear.providerId === userId;
+
+if (!hasAccess) {
+  throw new AppError(
+    httpStatus.FORBIDDEN,
+    "You are not authorized to update this gear."
+  );
+}
+
+  /**
+   * Category Validation
+   */
+  if (payload.categoryId) {
+    const category = await prisma.category.findUnique({
+      where: {
+        id: payload.categoryId,
+      },
+    });
+
+    if (!category) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        "Category not found."
+      );
+    }
+  }
+
+  /**
+   * Dynamic Whitelist
+   */
+  const updateData: IUpdateGear = {};
+
+  if (payload.name !== undefined)
+    updateData.name = payload.name;
+
+  if (payload.description !== undefined)
+    updateData.description = payload.description;
+
+  if (payload.brand !== undefined)
+    updateData.brand = payload.brand;
+
+  if (payload.image !== undefined)
+    updateData.image = payload.image;
+
+  if (payload.pricePerDay !== undefined)
+    updateData.pricePerDay = payload.pricePerDay;
+
+  if (payload.stock !== undefined)
+    updateData.stock = payload.stock;
+
+  if (payload.categoryId !== undefined)
+    updateData.categoryId = payload.categoryId;
+
+  /**
+   * Auto Availability
+   */
+  const stock =
+    updateData.stock ?? gear.stock;
+
+  const updatedGear =
+    await prisma.gearItem.update({
+      where: {
+        id: gear.id,
+      },
+
+      data: {
+        ...updateData,
+
+        availability:
+          stock > 0
+            ? "AVAILABLE"
+            : "UNAVAILABLE",
+      },
+
+      include: {
+        category: true,
+
+        provider: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+      },
+    });
+
+  return updatedGear;
+};
+
 export const gearService = {
   createGear,
   getAllGears,
-  getSingleGear
+  getSingleGear,
+  updateGear
 };

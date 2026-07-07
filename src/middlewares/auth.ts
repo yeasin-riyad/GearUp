@@ -7,6 +7,7 @@ import AppError from "../errors/AppError";
 import { prisma } from "../lib/prisma";
 import { jwtUtils } from "../utils/jwt";
 import { UserRole } from "../../generated/prisma/enums";
+import { TJwtPayload } from "../modules/auth/auth.interface";
 
 const auth =
   (...requiredRoles: UserRole[]) =>
@@ -23,7 +24,7 @@ const auth =
     const decoded = jwtUtils.verifyToken(
       token,
       config.jwt_access_secret
-    ) as JwtPayload;
+    ) as TJwtPayload;
 
     const user = await prisma.user.findUnique({
       where: {

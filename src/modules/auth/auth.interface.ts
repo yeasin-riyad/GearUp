@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import { UserRole } from "../../../generated/prisma/enums";
 
 export type IUser = {
@@ -25,4 +26,11 @@ export interface IUpdateProfile {
   avatar?: string;
   address?:string;
   city?:string
+}
+
+
+export interface TJwtPayload extends JwtPayload {
+  userId: string;
+  email: string;
+  role: UserRole;
 }

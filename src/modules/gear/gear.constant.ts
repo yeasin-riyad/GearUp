@@ -1,3 +1,5 @@
+import { UserRole } from "../../../generated/prisma/enums";
+
 export const gearSearchableFields = [
   "name",
   "brand",
@@ -27,4 +29,9 @@ export const gearSelectableFields = [
   "stock",
   "availability",
   "createdAt",
+];
+
+export const GEAR_MANAGEMENT_ROLES:UserRole[] = [
+  UserRole.ADMIN,
+  UserRole.PROVIDER
 ];

@@ -4,9 +4,8 @@ import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import config from "../../config";
 import AppError from "../../errors/AppError";
-import { IChangePassword, ILoginUser, IUpdateProfile, IUser } from "./auth.interface";
+import { IChangePassword, ILoginUser, IUpdateProfile, IUser, TJwtPayload } from "./auth.interface";
 import { jwtUtils } from "../../utils/jwt";
-import { JwtPayload } from "jsonwebtoken";
 
 const registerUserIntoDB = async (payload: IUser) => {
 
@@ -107,7 +106,7 @@ const loginUser = async (payload: ILoginUser) => {
   },
 });
 
-  const jwtPayload = {
+  const jwtPayload:TJwtPayload = {
     userId: user.id,
     email: user.email,
     role: user.role,
@@ -136,7 +135,7 @@ const refreshToken = async (token: string) => {
   const decoded = jwtUtils.verifyToken(
     token,
     config.jwt_refresh_secret
-  ) as JwtPayload;
+  ) as TJwtPayload;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -158,7 +157,7 @@ const refreshToken = async (token: string) => {
     );
   }
 
-  const jwtPayload = {
+  const jwtPayload:TJwtPayload = {
     userId: user.id,
     email: user.email,
     role: user.role,

@@ -1,9 +1,9 @@
-import { JwtPayload } from "jsonwebtoken";
+import { TJwtPayload } from "../modules/auth/auth.interface";
 
 declare global {
   namespace Express {
     interface Request {
-      user: JwtPayload;
+      user: TJwtPayload;
     }
   }
 }

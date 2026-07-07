@@ -1,7 +1,8 @@
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
+import { TJwtPayload } from "../modules/auth/auth.interface";
 
 const createToken = (
-  payload: JwtPayload,
+  payload:TJwtPayload,
   secret: string,
   expiresIn: SignOptions["expiresIn"]
 ) => {

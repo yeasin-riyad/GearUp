@@ -21,4 +21,10 @@ router.get(
   gearController.getSingleGear
 );
 
+router.patch(
+  "/:id",
+  auth(UserRole.ADMIN, UserRole.PROVIDER),
+  gearController.updateGear
+);
+
 export const gearRoutes = router;
