@@ -7,7 +7,7 @@ const router = Router();
 
 router.post(
   "/",
-  auth(UserRole.ADMIN, UserRole.PROVIDER),
+  auth(UserRole.PROVIDER),
   gearController.createGear
 );
 
@@ -23,8 +23,14 @@ router.get(
 
 router.patch(
   "/:id",
-  auth(UserRole.ADMIN, UserRole.PROVIDER),
+  auth(UserRole.PROVIDER),
   gearController.updateGear
 );
 
+
+router.delete(
+  "/:id",
+  auth(UserRole.PROVIDER),
+  gearController.deleteGear
+);
 export const gearRoutes = router;

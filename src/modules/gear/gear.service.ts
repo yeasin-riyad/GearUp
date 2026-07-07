@@ -154,7 +154,6 @@ const getSingleGear = async (gearId: string) => {
 const updateGear = async (
   gearId: string,
   userId: string,
-  role:UserRole,
   payload: IUpdateGear
 ) => {
   const gear = await prisma.gearItem.findUnique({
@@ -173,17 +172,12 @@ const updateGear = async (
   /**
    * Authorization
    */
- const hasAccess =
-  GEAR_MANAGEMENT_ROLES.includes(role) ||
-  gear.providerId === userId;
-
-if (!hasAccess) {
+ if (gear.providerId !== userId) {
   throw new AppError(
     httpStatus.FORBIDDEN,
     "You are not authorized to update this gear."
   );
 }
-
   /**
    * Category Validation
    */
@@ -265,9 +259,60 @@ if (!hasAccess) {
   return updatedGear;
 };
 
+
+const deleteGear = async (
+  gearId: string,
+  userId: string,
+) => {
+  const gear = await prisma.gearItem.findUnique({
+    where: {
+      id: gearId,
+    },
+  });
+
+  if (!gear) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Gear not found."
+    );
+  }
+
+  // Authorization
+if (gear.providerId !== userId) {
+  throw new AppError(
+    httpStatus.FORBIDDEN,
+    "You are not authorized to delete this gear."
+  );
+}
+
+  // Rental history check
+  const rentalCount =
+    await prisma.rentalOrderItem.count({
+      where: {
+        gearItemId: gear.id,
+      },
+    });
+
+  if (rentalCount > 0) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "This gear cannot be deleted because it has rental history."
+    );
+  }
+
+  await prisma.gearItem.delete({
+    where: {
+      id: gear.id,
+    },
+  });
+
+  return null;
+};
+
 export const gearService = {
   createGear,
   getAllGears,
   getSingleGear,
-  updateGear
+  updateGear,
+  deleteGear
 };
