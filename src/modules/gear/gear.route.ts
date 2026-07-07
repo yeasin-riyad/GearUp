@@ -16,4 +16,9 @@ router.get(
     gearController.getAllGears
 );
 
+router.get(
+  "/:id",
+  gearController.getSingleGear
+);
+
 export const gearRoutes = router;

@@ -101,7 +101,56 @@ const getAllGears = async (
   };
 };
 
+
+
+
+const getSingleGear = async (gearId: string) => {
+  const gear = await prisma.gearItem.findUnique({
+    where: {
+      id: gearId,
+    },
+
+    include: {
+      category: true,
+
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+
+      reviews: {
+        include: {
+          customer: {
+            select: {
+              id: true,
+              name: true,
+              avatar: true,
+            },
+          },
+        },
+
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
+  });
+
+  if (!gear) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "Gear not found."
+    );
+  }
+
+  return gear;
+};
+
 export const gearService = {
   createGear,
-  getAllGears
+  getAllGears,
+  getSingleGear
 };
