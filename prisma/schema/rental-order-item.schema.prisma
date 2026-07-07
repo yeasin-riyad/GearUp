@@ -12,6 +12,11 @@ model RentalOrderItem {
   pricePerDay Float
 
   subtotal Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([gearItemId])
+ @@index([rentalOrderId])
 
   @@map("rental_order_items")
 }

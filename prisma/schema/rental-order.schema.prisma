@@ -11,10 +11,14 @@ model RentalOrder {
 
   totalAmount Float
 
-  status RentalStatus
+  status RentalStatus @default(PLACED)
 
   payment Payment?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([customerId])
+@@index([status])
+@@index([createdAt])
 }
