@@ -21,7 +21,5 @@ export interface IUpdateGear {
   pricePerDay?: number;
   stock?: number;
 
-  availability?: "AVAILABLE" | "OUT_OF_STOCK";
-
   categoryId?: string;
 }

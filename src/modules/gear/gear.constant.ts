@@ -1,5 +1,3 @@
-
-
 export const gearSearchableFields = [
   "name",
   "brand",
