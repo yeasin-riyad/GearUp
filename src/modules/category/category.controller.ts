@@ -4,7 +4,6 @@ import httpStatus from "http-status";
 import { categoryService } from "./category.service";
 import { catchAsync } from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
-import AppError from "../../errors/AppError";
 
 const createCategory = catchAsync(async (req, res) => {
   const result = await categoryService.createCategory(req.body);
@@ -19,13 +18,14 @@ const createCategory = catchAsync(async (req, res) => {
 
 
 const getAllCategories = catchAsync(async (req, res) => {
-  const result = await categoryService.getAllCategories();
+  const result = await categoryService.getAllCategories(req.query);
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: "Categories retrieved successfully.",
-    data: result,
+    meta: result.meta,
+    data: result.data,
   });
 });
 

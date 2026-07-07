@@ -5,6 +5,9 @@ import { prisma } from "../../lib/prisma";
 import AppError from "../../errors/AppError";
 
 import { ICreateCategory, IUpdateCategory } from "./category.interface";
+import { categoryFilterableFields, categorySearchableFields, categorySelectableFields, categorySortableFields } from "./category.constant";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { Prisma } from "../../../generated/prisma/client";
 
 const createCategory = async (payload: ICreateCategory) => {
     if(!payload?.name){
@@ -54,14 +57,31 @@ const createCategory = async (payload: ICreateCategory) => {
 };
 
 
-const getAllCategories = async () => {
-  const categories = await prisma.category.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
+const getAllCategories = async (
+  query: Record<string, unknown>
+) => {
+  const builder = new QueryBuilder<Prisma.CategoryWhereInput>(
+    query
+  );
+
+  const options = builder
+    .search(categorySearchableFields)
+    .filter(categoryFilterableFields)
+    .sort(categorySortableFields)
+    .paginate()
+    .fields(categorySelectableFields)
+    .build();
+
+  const data = await prisma.category.findMany(options);
+
+  const total = await prisma.category.count({
+    where: options.where,
   });
 
-  return categories;
+  return {
+    meta: builder.getMeta(total),
+    data,
+  };
 };
 
 

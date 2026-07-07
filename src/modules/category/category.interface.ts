@@ -6,7 +6,6 @@ export interface ICreateCategory {
 
 export interface IUpdateCategory {
   name?: string;
-  slug?: string;
   description?: string;
   image?: string;
 }
