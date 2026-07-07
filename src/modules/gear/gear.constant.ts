@@ -11,10 +11,10 @@ export const gearFilterableFields = [
 ];
 
 export const gearSortableFields = [
-  "name",
+  "createdAt",
   "pricePerDay",
   "stock",
-  "createdAt",
+  "name",
 ];
 
 export const gearSelectableFields = [

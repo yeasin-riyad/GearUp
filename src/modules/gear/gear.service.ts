@@ -2,6 +2,9 @@ import httpStatus from "http-status";
 import { prisma } from "../../lib/prisma";
 import AppError from "../../errors/AppError";
 import { ICreateGear } from "./gear.interface";
+import QueryBuilder from "../../builder/QueryBuilder";
+import { Prisma } from "../../../generated/prisma/client";
+import { gearFilterableFields, gearSearchableFields, gearSelectableFields, gearSortableFields } from "./gear.constant";
 
 const createGear = async (
   userId: string,
@@ -56,6 +59,49 @@ const createGear = async (
   return gear;
 };
 
+
+const getAllGears = async (
+  query: Record<string, unknown>
+) => {
+  const builder =
+    new QueryBuilder<Prisma.GearItemWhereInput>(
+      query
+    );
+
+  const options = builder
+    .search(gearSearchableFields)
+    .filter(gearFilterableFields)
+    .sort(gearSortableFields)
+    .paginate()
+    .build();
+
+  const gears = await prisma.gearItem.findMany({
+    ...options,
+
+    include: {
+      category: true,
+
+      provider: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  const total = await prisma.gearItem.count({
+    where: options.where,
+  });
+
+  return {
+    meta: builder.getMeta(total),
+    data: gears,
+  };
+};
+
 export const gearService = {
   createGear,
+  getAllGears
 };

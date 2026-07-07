@@ -11,4 +11,9 @@ router.post(
   gearController.createGear
 );
 
+router.get(
+    "/",
+    gearController.getAllGears
+);
+
 export const gearRoutes = router;
