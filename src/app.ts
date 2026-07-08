@@ -8,16 +8,20 @@ import { authRoutes } from "./modules/auth/auth.route";
 import { categoryRoutes } from "./modules/category/category.route";
 import { gearRoutes } from "./modules/gear/gear.route";
 import { rentalRoutes } from "./modules/rental/rental.route";
+import { paymentRoutes } from "./modules/payment/payment.route";
 
 
 const app : Application = express();
 
 app.use(cors({
-    origin : config.app_url,
+    origin : config.client_url,
     credentials : true,
 }))
 
-
+app.use(
+  "/api/payments/webhook",
+  express.raw({ type: "application/json" })
+);
 
 
 
@@ -35,6 +39,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/categories",categoryRoutes)
 app.use("/api/gears", gearRoutes);
 app.use("/api/rentals",rentalRoutes)
+app.use("/api/payments",paymentRoutes)
 
 
 // Global error handler
