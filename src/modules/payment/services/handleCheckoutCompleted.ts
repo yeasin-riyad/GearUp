@@ -12,6 +12,9 @@ export const handleCheckoutCompleted = async (
   /**
    * Find Payment
    */
+
+  // console.log(session?.id);
+
   const payment = await prisma.payment.findUnique({
     where: {
       stripeSessionId: session.id,
@@ -25,6 +28,8 @@ export const handleCheckoutCompleted = async (
     },
   });
 
+  // console.log(payment,"Payment....");
+  // return;
   if (!payment) {
     throw new AppError(
       httpStatus.NOT_FOUND,
