@@ -3,8 +3,8 @@ import httpStatus from "http-status";
 
 import AppError from "../../../errors/AppError";
 import { prisma } from "../../../lib/prisma";
+import { updateGearStock } from "../utls/updateGearStock";
 
-import { updateGearStock } from "../utils/updateGearStock";
 
 export const handleCheckoutCompleted = async (
   session: Stripe.Checkout.Session
