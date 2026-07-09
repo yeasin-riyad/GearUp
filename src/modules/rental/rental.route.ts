@@ -11,4 +11,10 @@ router.post(
   rentalController.createRentalOrder
 );
 
+router.get(
+  "/provider",
+  auth(UserRole.PROVIDER),
+  rentalController.getIncomingRentals
+);
+
 export const rentalRoutes=router;

@@ -28,6 +28,7 @@ class QueryBuilder<TWhere = Record<string, any>> {
 
     return this;
   }
+  
 
   /**
    * Exact Filtering
