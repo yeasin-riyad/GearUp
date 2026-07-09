@@ -1,10 +1,10 @@
 import httpStatus from "http-status";
 
-import AppError from "../../../errors/AppError";
-import { prisma } from "../../../lib/prisma";
+import AppError from "../../../errors/AppError.js";
+import { prisma } from "../../../lib/prisma.js";
 
-import { rentalDetailsInclude } from "../constants/rental.include";
-import { validateRentalAccess } from "../utils/validateRentalAccess";
+import { rentalDetailsInclude } from "../constants/rental.include.js";
+import { validateRentalAccess } from "../utils/validateRentalAccess.js";
 
 export const pickupRental = async (
   rentalId: string,

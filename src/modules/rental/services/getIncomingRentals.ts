@@ -1,4 +1,4 @@
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma.js";
 
 export const getIncomingRentals = async (providerId: string) => {
   const rentals = await prisma.rentalOrder.findMany({

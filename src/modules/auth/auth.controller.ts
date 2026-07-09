@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import httpStatus from "http-status";
 
-import sendResponse from "../../utils/sendResponse";
-import { authService } from "./auth.service";
-import { catchAsync } from "../../utils/catchAsync";
-import config from "../../config";
-import AppError from "../../errors/AppError";
+import sendResponse from "../../utils/sendResponse.js";
+import { authService } from "./auth.service.js";
+import { catchAsync } from "../../utils/catchAsync.js";
+import AppError from "../../errors/AppError.js";
+import config from "../../config/index.js";
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerUserIntoDB(req.body);

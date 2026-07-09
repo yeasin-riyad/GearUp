@@ -1,7 +1,7 @@
-import { RentalOrder } from "../../../../generated/prisma/client";
-import QueryBuilder from "../../../builder/QueryBuilder";
-import { prisma } from "../../../lib/prisma";
-import { rentalDetailsInclude } from "../../rental/constants/rental.include";
+import { RentalOrder } from "@prisma/client";
+import QueryBuilder from "../../../builder/QueryBuilder.js";
+import { prisma } from "../../../lib/prisma.js";
+import { rentalDetailsInclude } from "../../rental/constants/rental.include.js";
 
 export const getProviderRentalHistory = async (
   providerId: string,

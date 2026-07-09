@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
 
-import AppError from "../../../errors/AppError";
-import { GearAvailability, Prisma } from "../../../../generated/prisma/client";
+import AppError from "../../../errors/AppError.js";
+import { GearAvailability, Prisma } from "@prisma/client";
 
 type RentalItem = {
   gearItemId: string;

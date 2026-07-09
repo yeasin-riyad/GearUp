@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 
-import sendResponse from "../../utils/sendResponse";
+import sendResponse from "../../utils/sendResponse.js";
 
-import { reviewService } from "./review.service";
-import { catchAsync } from "../../utils/catchAsync";
+import { reviewService } from "./review.service.js";
+import { catchAsync } from "../../utils/catchAsync.js";
 
 const createReview = catchAsync(async (req, res) => {
   const result = await reviewService.createReview(

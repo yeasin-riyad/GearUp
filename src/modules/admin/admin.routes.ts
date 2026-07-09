@@ -1,9 +1,9 @@
 import express from "express";
 
-import auth from "../../middlewares/auth";
+import auth from "../../middlewares/auth.js";
 
-import { adminController } from "./admin.controller";
-import { UserRole } from "../../../generated/prisma/enums";
+import { adminController } from "./admin.controller.js";
+import { UserRole } from "@prisma/client";
 
 const router = express.Router();
 

@@ -1,17 +1,17 @@
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { Application, Request, Response } from "express";
-import config from "./config";
-import { globalErrorHandler } from "./errors/globalErrorHandler";
-import { notFound } from "./middlewares/notFound";
-import { authRoutes } from "./modules/auth/auth.route";
-import { categoryRoutes } from "./modules/category/category.route";
-import { gearRoutes } from "./modules/gear/gear.route";
-import { rentalRoutes } from "./modules/rental/rental.route";
-import { paymentRoutes } from "./modules/payment/payment.route";
-import { providerRoutes } from "./modules/provider/provider.route";
-import { adminRoutes } from "./modules/admin/admin.routes";
-import { reviewRoutes } from "./modules/review/review.route";
+import config from "./config/index.js";
+import { globalErrorHandler } from "./errors/globalErrorHandler.js";
+import { notFound } from "./middlewares/notFound.js";
+import { authRoutes } from "./modules/auth/auth.route.js";
+import { categoryRoutes } from "./modules/category/category.route.js";
+import { gearRoutes } from "./modules/gear/gear.route.js";
+import { rentalRoutes } from "./modules/rental/rental.route.js";
+import { paymentRoutes } from "./modules/payment/payment.route.js";
+import { providerRoutes } from "./modules/provider/provider.route.js";
+import { adminRoutes } from "./modules/admin/admin.routes.js";
+import { reviewRoutes } from "./modules/review/review.route.js";
 
 
 const app : Application = express();

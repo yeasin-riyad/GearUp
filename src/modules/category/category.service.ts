@@ -1,13 +1,13 @@
 import httpStatus from "http-status";
 import slugify from "slugify";
 
-import { prisma } from "../../lib/prisma";
-import AppError from "../../errors/AppError";
+import { prisma } from "../../lib/prisma.js";
+import AppError from "../../errors/AppError.js";
 
-import { ICreateCategory, IUpdateCategory } from "./category.interface";
-import { categoryFilterableFields, categorySearchableFields, categorySelectableFields, categorySortableFields } from "./category.constant";
-import QueryBuilder from "../../builder/QueryBuilder";
-import { Prisma } from "../../../generated/prisma/client";
+import { ICreateCategory, IUpdateCategory } from "./category.interface.js";
+import { categoryFilterableFields, categorySearchableFields, categorySelectableFields, categorySortableFields } from "./category.constant.js";
+import QueryBuilder from "../../builder/QueryBuilder.js";
+import { Prisma } from "@prisma/client";
 
 const createCategory = async (payload: ICreateCategory) => {
     if(!payload?.name){

@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 
-import sendResponse from "../../utils/sendResponse";
+import sendResponse from "../../utils/sendResponse.js";
 
-import { adminService } from "./admin.service";
-import { catchAsync } from "../../utils/catchAsync";
+import { adminService } from "./admin.service.js";
+import { catchAsync } from "../../utils/catchAsync.js";
 
 const getDashboard = catchAsync(async (req, res) => {
   const result = await adminService.getDashboard();

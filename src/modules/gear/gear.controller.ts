@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import { catchAsync } from "../../utils/catchAsync";
-import { gearService } from "./gear.service";
-import sendResponse from "../../utils/sendResponse";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { gearService } from "./gear.service.js";
+import sendResponse from "../../utils/sendResponse.js";
 
 const createGear = catchAsync(async (req, res) => {
   const result = await gearService.createGear(

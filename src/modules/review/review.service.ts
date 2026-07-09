@@ -1,8 +1,8 @@
-import { createReview } from "./services/createReview";
-import { deleteReview } from "./services/deleteReview";
-import { getGearReviews } from "./services/getGearReviews";
-import { getMyReviews } from "./services/getMyReviews";
-import { updateReview } from "./services/updateReview";
+import { createReview } from "./services/createReview.js";
+import { deleteReview } from "./services/deleteReview.js";
+import { getGearReviews } from "./services/getGearReviews.js";
+import { getMyReviews } from "./services/getMyReviews.js";
+import { updateReview } from "./services/updateReview.js";
 
 export const reviewService = {
   createReview,

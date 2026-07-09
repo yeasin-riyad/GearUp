@@ -1,8 +1,8 @@
 import httpStatus from "http-status";
 
-import AppError from "../../../errors/AppError";
-import QueryBuilder from "../../../builder/QueryBuilder";
-import { prisma } from "../../../lib/prisma";
+import AppError from "../../../errors/AppError.js";
+import QueryBuilder from "../../../builder/QueryBuilder.js";
+import { prisma } from "../../../lib/prisma.js";
 
 export const getGearReviews = async (
   gearItemId: string,

@@ -1,9 +1,9 @@
 import httpStatus from "http-status";
 
-import AppError from "../../../errors/AppError";
-import { prisma } from "../../../lib/prisma";
+import AppError from "../../../errors/AppError.js";
+import { prisma } from "../../../lib/prisma.js";
 
-import { rentalDetailsInclude } from "../constants/rental.include";
+import { rentalDetailsInclude } from "../constants/rental.include.js";
 
 export const validateRentalAccess = async (
   rentalId: string,

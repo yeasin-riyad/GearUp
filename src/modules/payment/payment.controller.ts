@@ -1,7 +1,7 @@
 import httpStatus from "http-status";
-import sendResponse from "../../utils/sendResponse";
-import { catchAsync } from "../../utils/catchAsync";
-import { paymentService } from "./payment.service";
+import sendResponse from "../../utils/sendResponse.js";
+import { catchAsync } from "../../utils/catchAsync.js";
+import { paymentService } from "./payment.service.js";
 
 const createCheckoutSession = catchAsync(async (req, res) => {
   const { rentalOrderId } = req.params;

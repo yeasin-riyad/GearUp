@@ -1,10 +1,10 @@
 import httpStatus from "http-status";
-import { prisma } from "../../lib/prisma";
-import AppError from "../../errors/AppError";
-import { ICreateGear, IUpdateGear } from "./gear.interface";
-import QueryBuilder from "../../builder/QueryBuilder";
-import { Prisma, UserRole } from "../../../generated/prisma/client";
-import { GEAR_MANAGEMENT_ROLES, gearFilterableFields, gearSearchableFields, gearSelectableFields, gearSortableFields } from "./gear.constant";
+import { prisma } from "../../lib/prisma.js";
+import AppError from "../../errors/AppError.js";
+import { ICreateGear, IUpdateGear } from "./gear.interface.js";
+import QueryBuilder from "../../builder/QueryBuilder.js";
+import { Prisma } from "@prisma/client";
+import { GEAR_MANAGEMENT_ROLES, gearFilterableFields, gearSearchableFields, gearSelectableFields, gearSortableFields } from "./gear.constant.js";
 
 const createGear = async (
   userId: string,

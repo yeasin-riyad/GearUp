@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import { JwtPayload } from "jsonwebtoken";
 
-import config from "../config";
-import AppError from "../errors/AppError";
-import { prisma } from "../lib/prisma";
-import { jwtUtils } from "../utils/jwt";
-import { UserRole } from "../../generated/prisma/enums";
-import { TJwtPayload } from "../modules/auth/auth.interface";
+import config from "../config/index.js";
+import AppError from "../errors/AppError.js";
+import { prisma } from "../lib/prisma.js";
+import { jwtUtils } from "../utils/jwt.js";
+import { TJwtPayload } from "../modules/auth/auth.interface.js";
+import {  UserRole } from "@prisma/client";
 
 const auth =
   (...requiredRoles: UserRole[]) =>

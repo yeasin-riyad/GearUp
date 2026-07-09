@@ -1,9 +1,9 @@
 import Stripe from "stripe";
 import httpStatus from "http-status";
 
-import AppError from "../../../errors/AppError";
-import { prisma } from "../../../lib/prisma";
-import { updateGearStock } from "../utls/updateGearStock";
+import AppError from "../../../errors/AppError.js";
+import { prisma } from "../../../lib/prisma.js";
+import { updateGearStock } from "../utls/updateGearStock.js";
 
 
 export const handleCheckoutCompleted = async (

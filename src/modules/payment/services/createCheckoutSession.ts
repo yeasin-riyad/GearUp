@@ -1,8 +1,8 @@
 import httpStatus from "http-status";
-import { prisma } from "../../../lib/prisma";
-import AppError from "../../../errors/AppError";
-import { stripe } from "../../../lib/stirpe";
-import config from "../../../config";
+import { prisma } from "../../../lib/prisma.js";
+import AppError from "../../../errors/AppError.js";
+import { stripe } from "../../../lib/stirpe.js";
+import config from "../../../config/index.js";
 
 
 export const createCheckoutSession = async (
@@ -81,7 +81,7 @@ export const createCheckoutSession = async (
     );
   }
 
-  
+
 
   /**
  * Rental Status Validation

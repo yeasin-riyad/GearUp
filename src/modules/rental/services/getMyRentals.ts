@@ -1,6 +1,6 @@
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma.js";
 
-import { rentalDetailsInclude } from "../constants/rental.include";
+import { rentalDetailsInclude } from "../constants/rental.include.js";
 
 export const getMyRentals = async (
   customerId: string

@@ -1,11 +1,11 @@
 import bcrypt from "bcryptjs";
 import httpStatus from "http-status";
 
-import { prisma } from "../../lib/prisma";
-import config from "../../config";
-import AppError from "../../errors/AppError";
-import { IChangePassword, ILoginUser, IUpdateProfile, IUser, TJwtPayload } from "./auth.interface";
-import { jwtUtils } from "../../utils/jwt";
+import { prisma } from "../../lib/prisma.js";
+import config from "../../config/index.js";
+import AppError from "../../errors/AppError.js";
+import { IChangePassword, ILoginUser, IUpdateProfile, IUser, TJwtPayload } from "./auth.interface.js";
+import { jwtUtils } from "../../utils/jwt.js";
 
 const registerUserIntoDB = async (payload: IUser) => {
 

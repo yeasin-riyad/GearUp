@@ -1,10 +1,10 @@
-import { cancelRental } from "./services/cancelRental";
-import { confirmRental } from "./services/confirmRental";
-import { createRentalOrder } from "./services/createRentalOrder";
-import { getIncomingRentals } from "./services/getIncomingRentals";
-import { getMyRentals } from "./services/getMyRentals";
-import { pickupRental } from "./services/pickupRental";
-import { returnRental } from "./services/returnRental";
+import { cancelRental } from "./services/cancelRental.js";
+import { confirmRental } from "./services/confirmRental.js";
+import { createRentalOrder } from "./services/createRentalOrder.js";
+import { getIncomingRentals } from "./services/getIncomingRentals.js";
+import { getMyRentals } from "./services/getMyRentals.js";
+import { pickupRental } from "./services/pickupRental.js";
+import { returnRental } from "./services/returnRental.js";
 
 export const rentalService = {
   createRentalOrder,

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
-import AppError from "./AppError";
-import { Prisma } from "../../generated/prisma/client";
+import AppError from "./AppError.js";
 import jwt from "jsonwebtoken";
+import { Prisma } from "@prisma/client";
 
 
 export const globalErrorHandler = (

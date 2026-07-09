@@ -2,11 +2,11 @@ import { Request } from "express";
 import Stripe from "stripe";
 import httpStatus from "http-status";
 
-import config from "../../../config";
-import AppError from "../../../errors/AppError";
+import config from "../../../config/index.js";
+import AppError from "../../../errors/AppError.js";
 
-import { handleCheckoutCompleted } from "./handleCheckoutCompleted";
-import { handleCheckoutExpired } from "./handleCheckoutExpired";
+import { handleCheckoutCompleted } from "./handleCheckoutCompleted.js";
+import { handleCheckoutExpired } from "./handleCheckoutExpired.js";
 
 const stripe = new Stripe(config.stripe_secret_key);
 

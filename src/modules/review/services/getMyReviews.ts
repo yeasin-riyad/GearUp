@@ -1,5 +1,5 @@
-import QueryBuilder from "../../../builder/QueryBuilder";
-import { prisma } from "../../../lib/prisma";
+import QueryBuilder from "../../../builder/QueryBuilder.js";
+import { prisma } from "../../../lib/prisma.js";
 
 export const getMyReviews = async (
   customerId: string,

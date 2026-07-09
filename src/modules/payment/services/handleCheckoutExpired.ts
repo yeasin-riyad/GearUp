@@ -1,6 +1,6 @@
 import Stripe from "stripe";
 
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "../../../lib/prisma.js";
 
 export const handleCheckoutExpired = async (
   session: Stripe.Checkout.Session
