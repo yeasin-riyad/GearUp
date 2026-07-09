@@ -26,7 +26,6 @@ export const getMyReviews = async (
           select: {
             id: true,
             name: true,
-            thumbnail: true,
           },
         },
         rentalOrder: {

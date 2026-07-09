@@ -50,7 +50,7 @@ export const updateReview = async (
         select: {
           id: true,
           name: true,
-          profilePhoto: true,
+          avatar: true,
         },
       },
       gearItem: {

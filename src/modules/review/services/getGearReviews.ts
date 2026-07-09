@@ -55,7 +55,7 @@ export const getGearReviews = async (
           select: {
             id: true,
             name: true,
-            profilePhoto: true,
+            avatar: true,
           },
         },
       },

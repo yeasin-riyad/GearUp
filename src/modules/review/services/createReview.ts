@@ -134,7 +134,7 @@ export const createReview = async (
         select: {
           id: true,
           name: true,
-          profilePhoto: true,
+          avatar: true,
         },
       },
       gearItem: {
