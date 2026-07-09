@@ -11,6 +11,7 @@ import { rentalRoutes } from "./modules/rental/rental.route";
 import { paymentRoutes } from "./modules/payment/payment.route";
 import { providerRoutes } from "./modules/provider/provider.route";
 import { adminRoutes } from "./modules/admin/admin.routes";
+import { reviewRoutes } from "./modules/review/review.route";
 
 
 const app : Application = express();
@@ -44,6 +45,7 @@ app.use("/api/rentals",rentalRoutes)
 app.use("/api/payments",paymentRoutes)
 app.use("/api/providers", providerRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 
 // Global error handler
