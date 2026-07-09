@@ -33,7 +33,7 @@ const getAllCategories = catchAsync(async (req, res) => {
 const getSingleCategory = catchAsync(async (req, res) => {
   const { id } = req.params;
 
-  const result = await categoryService.getSingleCategory(id);
+  const result = await categoryService.getSingleCategory(id as string);
 
   sendResponse(res, {
     success: true,
