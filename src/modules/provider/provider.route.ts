@@ -13,4 +13,10 @@ router.get(
   providerController.getDashboard
 );
 
+router.get(
+  "/rentals/history",
+  auth(UserRole.PROVIDER),
+  providerController.getProviderRentalHistory
+);
+
 export const providerRoutes = router;
