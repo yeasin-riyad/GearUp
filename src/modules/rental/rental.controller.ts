@@ -66,9 +66,24 @@ const pickupRental = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+const returnRental = catchAsync(async (req, res) => {
+  const result = await rentalService.returnRental(
+    req.params.id as string,
+    req.user.userId
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Rental returned successfully.",
+    data: result,
+  });
+});
 export const rentalController={
     createRentalOrder,
     getIncomingRentals,
     confirmRental,
-    pickupRental
+    pickupRental,
+    returnRental
 }

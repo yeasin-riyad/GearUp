@@ -29,4 +29,10 @@ router.patch(
   rentalController.pickupRental
 );
 
+
+router.patch(
+  "/:id/return",
+  auth(UserRole.PROVIDER),
+  rentalController.returnRental
+);
 export const rentalRoutes=router;
