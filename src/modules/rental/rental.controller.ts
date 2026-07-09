@@ -80,10 +80,25 @@ const returnRental = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
+  // Only for Customer 
+const getMyRentals = catchAsync(async (req, res) => {
+  const customerId = req.user.userId;
+
+  const result = await rentalService.getMyRentals(customerId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Rental orders retrieved successfully.",
+    data: result,
+  });
+});
 export const rentalController={
     createRentalOrder,
     getIncomingRentals,
     confirmRental,
     pickupRental,
-    returnRental
+    returnRental,
+    getMyRentals
 }

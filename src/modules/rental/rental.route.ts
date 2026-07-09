@@ -11,6 +11,14 @@ router.post(
   rentalController.createRentalOrder
 );
 
+
+// get user rentals
+router.get(
+  "/my-rentals",
+  auth(UserRole.CUSTOMER),
+  rentalController.getMyRentals
+);
+
 router.get(
   "/provider",
   auth(UserRole.PROVIDER),
@@ -29,10 +37,10 @@ router.patch(
   rentalController.pickupRental
 );
 
-
 router.patch(
   "/:id/return",
   auth(UserRole.PROVIDER),
   rentalController.returnRental
 );
+
 export const rentalRoutes=router;

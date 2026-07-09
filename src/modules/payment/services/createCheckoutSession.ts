@@ -32,6 +32,8 @@ export const createCheckoutSession = async (
 },
   });
 
+
+
   if (!order) {
     throw new AppError(
       httpStatus.NOT_FOUND,
@@ -78,6 +80,58 @@ export const createCheckoutSession = async (
       "Rental order contains no items."
     );
   }
+
+  
+
+  /**
+ * Rental Status Validation
+ */
+if (order.status !== "PLACED") {
+  throw new AppError(
+    httpStatus.BAD_REQUEST,
+    "Only placed rental orders can proceed to payment."
+  );
+}
+
+/**
+ * Revalidate Latest Gear Stock & Availability
+ */
+const gearIds = order.items.map((item) => item.gearItemId);
+
+const latestGears = await prisma.gearItem.findMany({
+  where: {
+    id: {
+      in: gearIds,
+    },
+  },
+});
+
+for (const item of order.items) {
+  const gear = latestGears.find(
+    (g) => g.id === item.gearItemId
+  );
+
+  if (!gear) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      "One or more gear items were not found."
+    );
+  }
+
+  if (gear.availability !== "AVAILABLE") {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `${gear.name} is currently unavailable.`
+    );
+  }
+
+  if (gear.stock < item.quantity) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Only ${gear.stock} unit(s) of ${gear.name} are available.`
+    );
+  }
+}
 
   /**
    * Create Stripe Checkout Session
