@@ -33,8 +33,11 @@ app.use(express.urlencoded({ extended : true }));
 app.use(cookieParser())
 
 
-app.get("/",(req : Request, res : Response) => {
-    res.send("Hello from GearUp API");
+app.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "GearUp API is running."
+  });
 });
 
 // Routes
