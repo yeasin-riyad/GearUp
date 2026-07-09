@@ -1,18 +1,19 @@
 model Review {
-  id            String   @id @default(cuid())
+  id            String   @id @default(uuid())
 
   rating        Int
   comment       String?
 
   customerId    String
   gearItemId    String
-  rentalOrderId String @unique
+  rentalOrderId String
 
-  customer User @relation(fields: [customerId], references: [id])
-  gearItem GearItem @relation(fields: [gearItemId], references: [id])
-  rentalOrder RentalOrder @relation(fields: [rentalOrderId], references: [id])
+  customer      User        @relation(fields: [customerId], references: [id])
+  gearItem      GearItem    @relation(fields: [gearItemId], references: [id])
+  rentalOrder   RentalOrder @relation(fields: [rentalOrderId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([customerId, rentalOrderId, gearItemId])
 }

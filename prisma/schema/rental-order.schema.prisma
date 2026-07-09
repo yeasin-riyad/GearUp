@@ -14,7 +14,7 @@ model RentalOrder {
   status RentalStatus @default(PLACED)
 
   payment Payment?
-  review Review?
+  reviews Review[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
