@@ -2,6 +2,7 @@ import httpStatus from "http-status";
 import { ICreateRentalOrder } from "../rental.interface";
 import AppError from "../../../errors/AppError";
 import { prisma } from "../../../lib/prisma";
+import { validateRentalAvailability } from "../utils/validateRentalAvailability";
 
 
 export const createRentalOrder = async (
@@ -132,7 +133,7 @@ if (providerIds.size > 1) {
    */
   let totalAmount = 0;
 
-  const orderItems = items.map((item) => {
+  const orderItemsPromises = items.map(async (item) => {
     const gear = gears.find(
       (g) => g.id === item.gearItemId
     );
@@ -143,6 +144,12 @@ if (providerIds.size > 1) {
         "Gear not found."
       );
     }
+
+     await validateRentalAvailability(
+    gear.id,
+    rentalStartDate,
+    rentalEndDate
+  );
 
     if (item.quantity < 1) {
       throw new AppError(
@@ -165,12 +172,7 @@ if (providerIds.size > 1) {
       );
     }
 
-    const subtotal =
-      gear.pricePerDay *
-      item.quantity *
-      rentalDays;
-
-    totalAmount += subtotal;
+    const subtotal = gear.pricePerDay * item.quantity * rentalDays;
 
     return {
       gearItemId: gear.id,
@@ -179,6 +181,10 @@ if (providerIds.size > 1) {
       subtotal,
     };
   });
+  const orderItems = await Promise.all(orderItemsPromises);
+
+  // calculate total amount after resolving all item promises
+  totalAmount = orderItems.reduce((sum, it) => sum + it.subtotal, 0);
 
   /**
    * Transaction

@@ -43,4 +43,10 @@ router.patch(
   rentalController.returnRental
 );
 
+router.patch(
+  "/:id/cancel",
+  auth(UserRole.CUSTOMER),
+  rentalController.cancelRental
+);
+
 export const rentalRoutes=router;

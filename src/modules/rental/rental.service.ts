@@ -1,3 +1,4 @@
+import { cancelRental } from "./services/cancelRental";
 import { confirmRental } from "./services/confirmRental";
 import { createRentalOrder } from "./services/createRentalOrder";
 import { getIncomingRentals } from "./services/getIncomingRentals";
@@ -11,5 +12,7 @@ export const rentalService = {
   confirmRental,
   pickupRental,
   returnRental,
-  getMyRentals
+  getMyRentals,
+  cancelRental,
+
 };
