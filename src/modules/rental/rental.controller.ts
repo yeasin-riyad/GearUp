@@ -38,7 +38,37 @@ const getIncomingRentals = catchAsync(
   }
 );
 
+
+const confirmRental = catchAsync(async (req, res) => {
+  const result = await rentalService.confirmRental(
+    req.params.id as string,
+    req.user.userId
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Rental order confirmed successfully.",
+    data: result,
+  });
+});
+
+const pickupRental = catchAsync(async (req, res) => {
+  const result = await rentalService.pickupRental(
+    req.params.id as string,
+    req.user.userId
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Rental marked as picked up successfully.",
+    data: result,
+  });
+});
 export const rentalController={
     createRentalOrder,
-    getIncomingRentals
+    getIncomingRentals,
+    confirmRental,
+    pickupRental
 }

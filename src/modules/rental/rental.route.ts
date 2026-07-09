@@ -17,4 +17,16 @@ router.get(
   rentalController.getIncomingRentals
 );
 
+router.patch(
+  "/:id/confirm",
+  auth(UserRole.PROVIDER),
+  rentalController.confirmRental
+);
+
+router.patch(
+  "/:id/pick-up",
+  auth(UserRole.PROVIDER),
+  rentalController.pickupRental
+);
+
 export const rentalRoutes=router;
