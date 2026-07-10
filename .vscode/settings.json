@@ -1,0 +1,14 @@
+{
+    "editor.formatOnPaste": true,
+    "auto-rename-tag.activationOnLanguage": [
+
+        "*"
+    ],
+
+    
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  }
+
+}

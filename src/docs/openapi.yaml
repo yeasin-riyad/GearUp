@@ -1,0 +1,638 @@
+openapi: 3.0.3
+
+info:
+  title: GearUp API
+  version: 1.0.0
+  description: |
+    # 🚀 GearUp REST API
+
+    GearUp is a complete RESTful backend API for an Outdoor Gear Rental Platform.
+
+    ## Features
+
+    - JWT Authentication
+    - HTTP-only Cookie Authentication
+    - Role-based Authorization
+    - Outdoor Gear Rental
+    - Stripe Payment Integration
+    - Rental Availability Checking
+    - Reviews & Ratings
+    - Provider Dashboard
+    - Admin Dashboard
+
+    ## User Roles
+
+    - Customer
+    - Provider
+    - Admin
+
+    ## Authentication
+
+    Authentication is handled using **HTTP-only cookies**.
+
+    After a successful login, the server securely stores the access token and refresh token in HTTP-only cookies. Protected endpoints automatically authenticate requests using these cookies.
+
+servers:
+  - url: http://localhost:5000
+    description: Local Development Server
+  - url: https://gearup-1-9p45.onrender.com
+    description: Production Server
+
+tags:
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Category
+    description: Category management endpoints
+  - name: Gear
+    description: Gear management endpoints
+  - name: Rental
+    description: Rental order management
+  - name: Payment
+    description: Stripe payment endpoints
+  - name: Provider
+    description: Provider dashboard endpoints
+  - name: Admin
+    description: Admin dashboard endpoints
+  - name: Review
+    description: Customer review endpoints
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: accessToken
+
+  schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Request successful.
+        data:
+          type: object
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        statusCode:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Validation failed.
+        error:
+          type: object
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        phone:
+          type: string
+          nullable: true
+          example: "+8801712345678"
+        avatar:
+          type: string
+          nullable: true
+          example: "https://example.com/avatar.jpg"
+        role:
+          type: string
+          enum:
+            - CUSTOMER
+            - PROVIDER
+          example: CUSTOMER
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - SUSPENDED
+          example: ACTIVE
+        address:
+          type: string
+          nullable: true
+          example: "Dhaka, Bangladesh"
+        city:
+          type: string
+          nullable: true
+          example: "Dhaka"
+        lastLoginAt:
+          type: string
+          format: date-time
+          nullable: true
+        passwordChangedAt:
+          type: string
+          format: date-time
+          nullable: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    RegisterRequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+        - role
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+        password:
+          type: string
+          format: password
+          example: "Password@123"
+        phone:
+          type: string
+          example: "+8801712345678"
+        role:
+          type: string
+          enum:
+            - CUSTOMER
+            - PROVIDER
+          example: CUSTOMER
+        address:
+          type: string
+          example: "Dhaka, Bangladesh"
+        city:
+          type: string
+          example: "Dhaka"
+        avatar:
+          type: string
+          example: "https://example.com/avatar.jpg"
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: "admin@example.com"
+        password:
+          type: string
+          format: password
+          example: "Password@123"
+
+    ChangePasswordRequest:
+      type: object
+      required:
+        - oldPassword
+        - newPassword
+      properties:
+        oldPassword:
+          type: string
+          format: password
+          example: "Password@123"
+        newPassword:
+          type: string
+          format: password
+          example: "NewPassword@123"
+
+paths:
+  /api/auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: Register a new user
+      description: |
+        Register a new account as a **Customer** or **Provider**.
+
+        - Email must be unique.
+        - Password will be securely hashed before storing.
+        - Newly registered users are assigned **ACTIVE** status by default.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+            example:
+              name: Outdoor Gear BD
+              email: provider@example.com
+              password: Password@123
+              phone: "01812345678"
+              role: PROVIDER
+      responses:
+        "201":
+          description: User registered successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: User registered successfully
+                  data:
+                    $ref: "#/components/schemas/User"
+              example:
+                success: true
+                statusCode: 201
+                message: User registered successfully
+                data:
+                  id: 3eb0a70b-5b45-47b4-9b6f-bbbacf7d1bf6
+                  name: Outdoor Gear BD
+                  email: provider@example.com
+                  phone: "01812345678"
+                  avatar: null
+                  role: PROVIDER
+                  status: ACTIVE
+                  createdAt: "2026-07-10T13:33:26.950Z"
+                  updatedAt: "2026-07-10T13:33:26.950Z"
+
+  /api/auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Login user
+      description: |
+        Authenticate a user using email and password.
+
+        On successful login:
+
+        - Returns a JWT access token in the response body.
+        - Sets **accessToken** and **refreshToken** as secure HTTP-only cookies.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+            example:
+              email: admin@example.com
+              password: Password@123
+      responses:
+        "200":
+          description: Login successful.
+          headers:
+            Set-Cookie:
+              description: |
+                Sets the following HTTP-only cookies:
+
+                - accessToken
+                - refreshToken
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Login successful
+                  data:
+                    type: object
+                    properties:
+                      accessToken:
+                        type: string
+                        description: JWT Access Token
+              example:
+                success: true
+                statusCode: 200
+                message: Login successful
+                data:
+                  accessToken: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+  /api/auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: Logout user
+      description: |
+        Logs out the currently authenticated user.
+
+        This endpoint clears the following HTTP-only cookies:
+
+        - accessToken
+        - refreshToken
+      operationId: logoutUser
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Logged out successfully.
+          headers:
+            Set-Cookie:
+              description: Clears authentication cookies.
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Logged out successfully
+                  data:
+                    type: object
+                    nullable: true
+                    example: null
+              example:
+                success: true
+                statusCode: 200
+                message: Logged out successfully
+                data: null
+
+  /api/auth/me:
+    get:
+      tags:
+        - Authentication
+      summary: Get authenticated user profile
+      description: |
+        Returns the profile information of the currently authenticated user.
+      operationId: getProfile
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Profile retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Profile retrieved successfully
+                  data:
+                    $ref: "#/components/schemas/User"
+              example:
+                success: true
+                statusCode: 200
+                message: Profile retrieved successfully
+                data:
+                  id: 3eb0a70b-5b45-47b4-9b6f-bbbacf7d1bf6
+                  name: Outdoor Gear BD
+                  email: provider11@example.com
+                  phone: "01812345678"
+                  avatar: null
+                  role: PROVIDER
+                  status: ACTIVE
+                  createdAt: "2026-07-10T13:33:26.950Z"
+                  lastLoginAt: "2026-07-10T14:53:01.487Z"
+
+  /api/auth/refresh-token:
+    post:
+      tags:
+        - Authentication
+
+      summary: Refresh access token
+
+      description: |
+        Generates a new access token using the refresh token stored in the HTTP-only cookie.
+
+        On success, the server updates both:
+
+        - accessToken
+        - refreshToken
+
+        as secure HTTP-only cookies.
+
+      operationId: refreshAccessToken
+
+      security:
+        - cookieAuth: []
+
+      responses:
+        "200":
+          description: Access token refreshed successfully.
+
+          headers:
+            Set-Cookie:
+              description: Updates the accessToken and refreshToken cookies.
+              schema:
+                type: string
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Access token refreshed successfully.
+
+                  data:
+                    type: string
+                    description: Newly generated JWT access token
+
+              example:
+                success: true
+                statusCode: 200
+                message: Access token refreshed successfully.
+                data: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+  /api/auth/change-password:
+    patch:
+      tags:
+        - Authentication
+
+      summary: Change user password
+
+      description: |
+        Allows an authenticated user to change their password.
+
+      operationId: changePassword
+
+      security:
+        - cookieAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+
+            example:
+              oldPassword: Password@123
+              newPassword: Password@1234
+
+      responses:
+        "200":
+          description: Password changed successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Password changed successfully
+
+                  data:
+                    nullable: true
+                    example: null
+
+              example:
+                success: true
+                statusCode: 200
+                message: Password changed successfully
+                data: null
+
+  /api/auth/profile:
+    patch:
+      tags:
+        - Authentication
+
+      summary: Update authenticated user profile
+
+      description: |
+        Updates the profile information of the currently authenticated user.
+
+      operationId: updateProfile
+
+      security:
+        - cookieAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              type: object
+
+              properties:
+                name:
+                  type: string
+
+                phone:
+                  type: string
+
+                avatar:
+                  type: string
+
+                address:
+                  type: string
+
+                city:
+                  type: string
+
+            examples:
+              basic:
+                summary: Update basic profile
+                value:
+                  name: Gear Shop Bd Update
+                  address: Dhaka,Mirpur
+                  city: Mirpur
+
+      responses:
+        "200":
+          description: Profile updated successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Profile updated successfully
+
+                  data:
+                    $ref: "#/components/schemas/User"
+
+              example:
+                success: true
+                statusCode: 200
+                message: Profile updated successfully
+
+                data:
+                  id: 3eb0a70b-5b45-47b4-9b6f-bbbacf7d1bf6
+                  name: Gear Shop Bd Update
+                  email: provider11@example.com
+                  phone: "01812345678"
+                  avatar: null
+                  address: Dhaka,Mirpur
+                  city: Mirpur
+                  role: PROVIDER
+                  status: ACTIVE
+                  lastLoginAt: "2026-07-10T14:53:01.487Z"
+                  createdAt: "2026-07-10T13:33:26.950Z"
+                  updatedAt: "2026-07-10T15:41:42.150Z"

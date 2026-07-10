@@ -12,7 +12,8 @@ import { paymentRoutes } from "./modules/payment/payment.route.js";
 import { providerRoutes } from "./modules/provider/provider.route.js";
 import { adminRoutes } from "./modules/admin/admin.routes.js";
 import { reviewRoutes } from "./modules/review/review.route.js";
-
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./docs/swagger.js";
 
 const app : Application = express();
 
@@ -50,6 +51,11 @@ app.use("/api/providers", providerRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/reviews", reviewRoutes);
 
+app.use(
+  "/api/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocument)
+);
 
 // Global error handler
 app.use(notFound)
