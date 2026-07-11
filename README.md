@@ -252,7 +252,7 @@ src
 Clone the repository
 
 ```bash
-git clone <https://github.com/yeasin-riyad/GearUp.git>
+git clone https://github.com/yeasin-riyad/GearUp.git
 ```
 
 Install dependencies
@@ -458,11 +458,6 @@ If you'd like to improve the project, feel free to fork the repository and submi
 
 ---
 
-# 📄 License
-
-This project is licensed under the MIT License.
-
----
 
 <p align="center">
 Made with ❤️ using Node.js, Express, TypeScript, PostgreSQL, Prisma & Stripe.
