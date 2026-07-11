@@ -33,8 +33,6 @@ info:
     After a successful login, the server securely stores the access token and refresh token in HTTP-only cookies. Protected endpoints automatically authenticate requests using these cookies.
 
 servers:
-  - url: http://localhost:5000
-    description: Local Development Server
   - url: https://gearup-1-9p45.onrender.com
     description: Production Server
 
