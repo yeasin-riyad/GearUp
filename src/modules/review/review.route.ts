@@ -14,6 +14,11 @@ router.get(
 );
 
 router.get(
+  "/",
+  reviewController.getAllGearReviews
+);
+
+router.get(
   "/gear/:gearItemId",
   reviewController.getGearReviews
 );

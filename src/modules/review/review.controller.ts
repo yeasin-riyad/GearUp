@@ -19,6 +19,20 @@ const createReview = catchAsync(async (req, res) => {
   });
 });
 
+export const getAllGearReviews = catchAsync(async (req, res) => {
+  const result = await reviewService.getAllGearReviews(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Reviews retrieved successfully.",
+    meta: result.meta,
+    data: {
+      statistics: result.statistics,
+      reviews: result.data,
+    },
+  });
+});
 
 const getGearReviews = catchAsync(async (req, res) => {
   const gearItemId = req.params.gearItemId as string;
@@ -87,4 +101,5 @@ export const reviewController = {
   getMyReviews,
   updateReview,
   deleteReview,
+  getAllGearReviews
 };

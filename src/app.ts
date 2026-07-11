@@ -17,10 +17,15 @@ import swaggerDocument from "./docs/swagger.js";
 
 const app : Application = express();
 
-app.use(cors({
-    origin : config.client_url,
-    credentials : true,
-}))
+app.use(
+  cors({
+    origin: [
+      "https://gearup-1-9p45.onrender.com",
+      ...(config.client_url ? [config.client_url] : []),
+    ],
+    credentials: true,
+  })
+);
 
 app.use(
   "/api/payments/webhook",

@@ -57,7 +57,7 @@ tags:
     description: Customer review endpoints
 
 components:
-  securitySchemes:
+  securityScheSchemes:
     cookieAuth:
       type: apiKey
       in: cookie
@@ -118,6 +118,7 @@ components:
           enum:
             - CUSTOMER
             - PROVIDER
+            - ADMIN
           example: CUSTOMER
         status:
           type: string
@@ -215,6 +216,510 @@ components:
           type: string
           format: password
           example: "NewPassword@123"
+
+    Category:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "1e8ff74f-b926-4a44-817b-b622b9ba4fec"
+        name:
+          type: string
+          example: "Team Sports"
+        slug:
+          type: string
+          example: "team-sports"
+        description:
+          type: string
+          nullable: true
+          example: "Equipment for football, basketball, volleyball, and more."
+        image:
+          type: string
+          nullable: true
+          example: "https://images.unsplash.com/photo-1517649763962-0c623066013b"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateCategoryRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: "Water Sports"
+        description:
+          type: string
+          example: "Kayaks, surfboards, paddleboards, and more."
+        image:
+          type: string
+          example: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+
+    Gear:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        name:
+          type: string
+          example: "Mountain Camping Tent"
+        description:
+          type: string
+          example: "A lightweight waterproof camping tent suitable for 4 people."
+        brand:
+          type: string
+          nullable: true
+          example: "Quechua"
+        image:
+          type: string
+          nullable: true
+          example: "https://images.unsplash.com/photo-1504280390368-397dc97c4b07"
+        pricePerDay:
+          type: number
+          format: float
+          example: 45
+        stock:
+          type: integer
+          example: 12
+        availability:
+          type: string
+          enum:
+            - AVAILABLE
+            - UNAVAILABLE
+          example: "AVAILABLE"
+        providerId:
+          type: string
+          format: uuid
+          example: "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d"
+        categoryId:
+          type: string
+          format: uuid
+          example: "1e8ff74f-b926-4a44-817b-b622b9ba4fec"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    CreateGearRequest:
+      type: object
+      required:
+        - name
+        - description
+        - pricePerDay
+        - stock
+        - categoryId
+      properties:
+        name:
+          type: string
+          example: "Mountain Camping Tent"
+        description:
+          type: string
+          example: "A lightweight waterproof camping tent suitable for 4 people."
+        brand:
+          type: string
+          example: "Quechua"
+        image:
+          type: string
+          example: "https://images.unsplash.com/photo-1504280390368-397dc97c4b07"
+        pricePerDay:
+          type: number
+          format: float
+          example: 45
+        stock:
+          type: integer
+          example: 12
+        categoryId:
+          type: string
+          format: uuid
+          example: "8343d527-e84f-4f32-b17e-669d7734acc7"
+
+    UpdateGearRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Premium Mountain Camping Tent"
+        description:
+          type: string
+          example: "An updated description for the lightweight waterproof camping tent."
+        brand:
+          type: string
+          example: "Quechua"
+        image:
+          type: string
+          example: "https://images.unsplash.com/photo-1504280390368-397dc97c4b07"
+        pricePerDay:
+          type: number
+          format: float
+          example: 50.0
+        stock:
+          type: integer
+          example: 15
+        availability:
+          type: string
+          enum:
+            - AVAILABLE
+            - UNAVAILABLE
+          example: "AVAILABLE"
+        categoryId:
+          type: string
+          format: uuid
+          example: "8343d527-e84f-4f32-b17e-669d7734acc7"
+
+    ProviderSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "3eb0a70b-5b45-47b4-9b6f-bbbacf7d1bf6"
+        name:
+          type: string
+          example: "Outdoor Gear BD"
+        email:
+          type: string
+          format: email
+          example: "provider@example.com"
+
+    CustomerSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        avatar:
+          type: string
+          nullable: true
+
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        comment:
+          type: string
+          nullable: true
+        customerId:
+          type: string
+          format: uuid
+        gearItemId:
+          type: string
+          format: uuid
+        rentalOrderId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        customer:
+          $ref: "#/components/schemas/CustomerSummary"
+
+    RentalItemRequest:
+      type: object
+      required:
+        - gearItemId
+        - quantity
+      properties:
+        gearItemId:
+          type: string
+          format: uuid
+          example: "6325e342-7a02-4307-a49d-b2c73cd37aeb"
+        quantity:
+          type: integer
+          minimum: 1
+          example: 1
+
+    CreateRentalRequest:
+      type: object
+      required:
+        - startDate
+        - endDate
+        - items
+      properties:
+        startDate:
+          type: string
+          format: date
+          example: "2026-07-11"
+        endDate:
+          type: string
+          format: date
+          example: "2026-07-14"
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/RentalItemRequest"
+
+    CustomerSummaryRental:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "b37810ae-d4a4-4c24-a457-d9d34afbe36a"
+        name:
+          type: string
+          example: "Customer"
+        email:
+          type: string
+          format: email
+          example: "customer@example.com"
+        avatar:
+          type: string
+          nullable: true
+          example: null
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "d7320708-8669-4a75-819d-7ee89fd9e563"
+        stripeSessionId:
+          type: string
+          nullable: true
+          example: null
+        stripePaymentIntentId:
+          type: string
+          nullable: true
+          example: null
+        amount:
+          type: number
+          format: float
+          example: 96
+        status:
+          type: string
+          enum:
+            - PENDING
+            - COMPLETED
+            - FAILED
+          example: "PENDING"
+        paidAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        rentalOrderId:
+          type: string
+          example: "cmrfzzm0k00001ggb8yu51ouh"
+        customerId:
+          type: string
+          format: uuid
+          example: "b37810ae-d4a4-4c24-a457-d9d34afbe36a"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    RentalItem:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "cmrfzzm6c00011ggbzetggdnc"
+        rentalOrderId:
+          type: string
+          example: "cmrfzzm0k00001ggb8yu51ouh"
+        gearItemId:
+          type: string
+          format: uuid
+          example: "6325e342-7a02-4307-a49d-b2c73cd37aeb"
+        quantity:
+          type: integer
+          example: 1
+        pricePerDay:
+          type: number
+          format: float
+          example: 10
+        subtotal:
+          type: number
+          format: float
+          example: 30
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        gearItem:
+          allOf:
+            - $ref: "#/components/schemas/Gear"
+            - type: object
+              properties:
+                category:
+                  $ref: "#/components/schemas/Category"
+
+    Rental:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "cmrfzzm0k00001ggb8yu51ouh"
+        customerId:
+          type: string
+          format: uuid
+          example: "b37810ae-d4a4-4c24-a457-d9d34afbe36a"
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        totalAmount:
+          type: number
+          format: float
+          example: 96
+        status:
+          type: string
+          enum:
+            - PLACED
+            - CONFIRMED
+            - PAID
+            - PICKED_UP
+            - RETURNED
+            - CANCELLED
+          example: "PLACED"
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        customer:
+          $ref: "#/components/schemas/CustomerSummaryRental"
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/RentalItem"
+        payment:
+          $ref: "#/components/schemas/Payment"
+
+    GearReviewSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "6325e342-7a02-4307-a49d-b2c73cd37aeb"
+        name:
+          type: string
+          example: "Black Diamond Half Dome Helmet Updated"
+        image:
+          type: string
+          nullable: true
+          example: "https://images.unsplash.com/photo-1517466787929-bc90951d0974"
+
+    CreateReviewRequest:
+      type: object
+
+      required:
+        - rentalOrderId
+        - gearItemId
+        - rating
+
+      properties:
+        rentalOrderId:
+          type: string
+          example: cmrgarh2400001gewj4phq3jz
+
+        gearItemId:
+          type: string
+          format: uuid
+          example: 6325e342-7a02-4307-a49d-b2c73cd37aeb
+
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 5
+
+        comment:
+          type: string
+          example: Excellent gear!.
+
+    GearReviewCreateSummary:
+      type: object
+
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 6325e342-7a02-4307-a49d-b2c73cd37aeb
+
+        name:
+          type: string
+          example: Black Diamond Half Dome Helmet Updated
+
+    PaginationMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        limit:
+          type: integer
+          example: 10
+        total:
+          type: integer
+          example: 35
+        totalPage:
+          type: integer
+          example: 4
+        hasNext:
+          type: boolean
+          example: true
+        hasPrev:
+          type: boolean
+          example: false
+
+    UpdateReviewRequest:
+      type: object
+      minProperties: 1
+
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+          example: 4
+
+        comment:
+          type: string
+          example: Excellent gear! The condition was perfect, pickup was smooth, and the provider was very helpful. Highly recommended updated......
+
+    GearReviewGearSummary:
+      type: object
+
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 6325e342-7a02-4307-a49d-b2c73cd37aeb
+
+        name:
+          type: string
+          example: Black Diamond Half Dome Helmet Updated
 
 paths:
   /api/auth/register:
@@ -431,9 +936,7 @@ paths:
     post:
       tags:
         - Authentication
-
       summary: Refresh access token
-
       description: |
         Generates a new access token using the refresh token stored in the HTTP-only cookie.
 
@@ -443,44 +946,34 @@ paths:
         - refreshToken
 
         as secure HTTP-only cookies.
-
       operationId: refreshAccessToken
-
       security:
         - cookieAuth: []
-
       responses:
         "200":
           description: Access token refreshed successfully.
-
           headers:
             Set-Cookie:
               description: Updates the accessToken and refreshToken cookies.
               schema:
                 type: string
-
           content:
             application/json:
               schema:
                 type: object
-
                 properties:
                   success:
                     type: boolean
                     example: true
-
                   statusCode:
                     type: integer
                     example: 200
-
                   message:
                     type: string
                     example: Access token refreshed successfully.
-
                   data:
                     type: string
                     description: Newly generated JWT access token
-
               example:
                 success: true
                 statusCode: 200
@@ -491,55 +984,41 @@ paths:
     patch:
       tags:
         - Authentication
-
       summary: Change user password
-
       description: |
         Allows an authenticated user to change their password.
-
       operationId: changePassword
-
       security:
         - cookieAuth: []
-
       requestBody:
         required: true
-
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/ChangePasswordRequest"
-
             example:
               oldPassword: Password@123
               newPassword: Password@1234
-
       responses:
         "200":
           description: Password changed successfully.
-
           content:
             application/json:
               schema:
                 type: object
-
                 properties:
                   success:
                     type: boolean
                     example: true
-
                   statusCode:
                     type: integer
                     example: 200
-
                   message:
                     type: string
                     example: Password changed successfully
-
                   data:
                     nullable: true
                     example: null
-
               example:
                 success: true
                 statusCode: 200
@@ -550,41 +1029,29 @@ paths:
     patch:
       tags:
         - Authentication
-
       summary: Update authenticated user profile
-
       description: |
         Updates the profile information of the currently authenticated user.
-
       operationId: updateProfile
-
       security:
         - cookieAuth: []
-
       requestBody:
         required: true
-
         content:
           application/json:
             schema:
               type: object
-
               properties:
                 name:
                   type: string
-
                 phone:
                   type: string
-
                 avatar:
                   type: string
-
                 address:
                   type: string
-
                 city:
                   type: string
-
             examples:
               basic:
                 summary: Update basic profile
@@ -592,37 +1059,29 @@ paths:
                   name: Gear Shop Bd Update
                   address: Dhaka,Mirpur
                   city: Mirpur
-
       responses:
         "200":
           description: Profile updated successfully.
-
           content:
             application/json:
               schema:
                 type: object
-
                 properties:
                   success:
                     type: boolean
                     example: true
-
                   statusCode:
                     type: integer
                     example: 200
-
                   message:
                     type: string
                     example: Profile updated successfully
-
                   data:
                     $ref: "#/components/schemas/User"
-
               example:
                 success: true
                 statusCode: 200
                 message: Profile updated successfully
-
                 data:
                   id: 3eb0a70b-5b45-47b4-9b6f-bbbacf7d1bf6
                   name: Gear Shop Bd Update
@@ -636,3 +1095,2118 @@ paths:
                   lastLoginAt: "2026-07-10T14:53:01.487Z"
                   createdAt: "2026-07-10T13:33:26.950Z"
                   updatedAt: "2026-07-10T15:41:42.150Z"
+
+  /api/categories:
+    post:
+      tags:
+        - Category
+      summary: Create a new category
+      description: |
+        Creates a new gear category.
+
+        **Authorization Required**
+
+        Only users with the **ADMIN** role can create categories.
+      operationId: createCategory
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategoryRequest"
+            example:
+              name: Water Sports
+              description: Kayaks, surfboards, paddleboards, and more.
+              image: https://images.unsplash.com/photo-1507525428034-b723cf961d3e
+      responses:
+        "201":
+          description: Category created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: Category created successfully.
+                  data:
+                    $ref: "#/components/schemas/Category"
+              example:
+                success: true
+                statusCode: 201
+                message: Category created successfully.
+                data:
+                  id: 1e8ff74f-b926-4a44-817b-b622b9ba4fec
+                  name: Team Sports
+                  slug: team-sports
+                  description: Equipment for football, basketball, volleyball, and more.
+                  image: https://images.unsplash.com/photo-1517649763962-0c623066013b
+                  createdAt: "2026-07-10T16:19:22.469Z"
+                  updatedAt: "2026-07-10T16:19:22.469Z"
+
+    get:
+      tags:
+        - Category
+      summary: Get all categories
+      description: |
+        Retrieves a paginated list of all available gear categories.
+      operationId: getAllCategories
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: search
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          required: false
+          schema:
+            type: string
+            example: createdAt
+        - name: sortOrder
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            example: desc
+      responses:
+        "200":
+          description: Categories retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Categories retrieved successfully.
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      total:
+                        type: integer
+                      totalPage:
+                        type: integer
+                      hasNext:
+                        type: boolean
+                      hasPrev:
+                        type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Category"
+              example:
+                success: true
+                statusCode: 200
+                message: Categories retrieved successfully.
+                meta:
+                  page: 1
+                  limit: 10
+                  total: 5
+                  totalPage: 1
+                  hasNext: false
+                  hasPrev: false
+                data:
+                  - id: 1e8ff74f-b926-4a44-817b-b622b9ba4fec
+                    name: Team Sports
+                    slug: team-sports
+                    description: Equipment for football, basketball, volleyball, and more.
+                    image: https://images.unsplash.com/photo-1517649763962-0c623066013b
+                    createdAt: "2026-07-10T16:19:22.469Z"
+                    updatedAt: "2026-07-10T16:19:22.469Z"
+
+  /api/categories/{id}:
+    get:
+      tags:
+        - Category
+      summary: Get category by ID
+      description: |
+        Retrieves a single category by its unique ID.
+      operationId: getCategoryById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: 531e3aa0-695a-4e93-8e8a-8a3ceee1e1a1
+      responses:
+        "200":
+          description: Category retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: Category retrieved successfully.
+                  data:
+                    $ref: "#/components/schemas/Category"
+              example:
+                success: true
+                statusCode: 200
+                message: Category retrieved successfully.
+                data:
+                  id: 531e3aa0-695a-4e93-8e8a-8a3ceee1e1a1
+                  name: Fitness Update
+                  slug: fitness-update
+                  description: Gym and home workout equipment Update Collection.
+                  image: https://images.unsplash.com/photo-1517836357463-d25dfeac3438
+                  createdAt: "2026-07-10T05:19:16.482Z"
+                  updatedAt: "2026-07-10T05:28:59.135Z"
+
+    patch:
+      tags:
+        - Category
+      summary: Update category by ID
+      description: |
+        Updates an existing category.
+
+        **Authorization Required**
+
+        Only users with the **ADMIN** role can update categories.
+      operationId: updateCategory
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique category ID.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCategoryRequest"
+            example:
+              name: Fitness Update
+              description: Gym and home workout equipment Update Collection.
+              image: https://images.unsplash.com/photo-1517836357463-d25dfeac3438
+      responses:
+        "200":
+          description: Category updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    $ref: "#/components/schemas/Category"
+              example:
+                success: true
+                statusCode: 200
+                message: Category updated successfully.
+                data:
+                  id: 1e8ff74f-b926-4a44-817b-b622b9ba4fec
+                  name: Team Sports
+                  slug: team-sports
+                  description: Equipment for football, basketball, volleyball, and more.
+                  image: https://images.unsplash.com/photo-1517649763962-0c623066013b
+                  createdAt: "2026-07-10T16:19:22.469Z"
+                  updatedAt: "2026-07-10T16:19:22.469Z"
+
+    delete:
+      tags:
+        - Category
+      summary: Delete category by ID
+      description: |
+        Deletes a category by its unique ID.
+
+        **Authorization Required**
+
+        Only users with the **ADMIN** role can delete categories.
+
+        A category cannot be deleted if it is assigned to one or more gear items.
+      operationId: deleteCategory
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique category ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Category deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    nullable: true
+              example:
+                success: true
+                statusCode: 200
+                message: Category deleted successfully.
+                data: null
+        "400":
+          description: Category cannot be deleted because it is assigned to one or more gear items.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  error:
+                    type: object
+              example:
+                success: false
+                statusCode: 400
+                message: Cannot delete category because it is assigned to one or more gear items.
+                error:
+                  name: AppError
+
+  /api/gears:
+    post:
+      tags:
+        - Gear
+      summary: Create a new gear
+      description: |
+        Creates a new rental gear.
+
+        **Authorization Required**
+
+        Only users with the **PROVIDER** role can create gear.
+
+        The `providerId` is automatically extracted from the authenticated user's HTTP-only cookie.
+      operationId: createGear
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateGearRequest"
+            example:
+              name: "Camping Tent 4 Person"
+              description: "Waterproof camping tent suitable for four people."
+              brand: "NatureHike"
+              image: "https://example.com/images/tent.jpg"
+              pricePerDay: 35
+              stock: 8
+              categoryId: "f86f497f-3eeb-433b-98ce-437b51056fb1"
+      responses:
+        "201":
+          description: Gear created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: "Gear created successfully."
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Gear"
+                      - type: object
+                        properties:
+                          category:
+                            $ref: "#/components/schemas/Category"
+                          provider:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                                example: "3eb0a70b-5b45-47b4-9b6f-bbbacf7d1bf6"
+                              name:
+                                type: string
+                                example: "Outdoor Gear BD"
+                              email:
+                                type: string
+                                format: email
+                                example: "provider@example.com"
+
+    get:
+      tags:
+        - Gear
+      summary: Get all gears
+      description: |
+        Retrieves a paginated list of rental gears.
+
+        Supports searching, filtering, sorting, and pagination.
+      operationId: getAllGears
+      parameters:
+        - name: page
+          in: query
+          required: false
+          description: Page number.
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: limit
+          in: query
+          required: false
+          description: Number of items per page.
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+        - name: search
+          in: query
+          required: false
+          description: Search by gear name or brand.
+          schema:
+            type: string
+        - name: sortBy
+          in: query
+          required: false
+          description: Field to sort by.
+          schema:
+            type: string
+            enum:
+              - createdAt
+              - updatedAt
+              - name
+              - pricePerDay
+              - stock
+        - name: sortOrder
+          in: query
+          required: false
+          description: Sort order.
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+        - name: categoryId
+          in: query
+          required: false
+          description: Filter by category ID.
+          schema:
+            type: string
+            format: uuid
+        - name: providerId
+          in: query
+          required: false
+          description: Filter by provider ID.
+          schema:
+            type: string
+            format: uuid
+        - name: availability
+          in: query
+          required: false
+          description: Filter by gear availability.
+          schema:
+            type: string
+            enum:
+              - AVAILABLE
+              - UNAVAILABLE
+        - name: minPrice
+          in: query
+          required: false
+          description: Minimum rental price per day.
+          schema:
+            type: number
+            format: float
+        - name: maxPrice
+          in: query
+          required: false
+          description: Maximum rental price per day.
+          schema:
+            type: number
+            format: float
+        - name: brand
+          in: query
+          required: false
+          description: Filter by brand.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Gears retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Gears retrieved successfully."
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      total:
+                        type: integer
+                        example: 45
+                      totalPage:
+                        type: integer
+                        example: 5
+                      hasNext:
+                        type: boolean
+                        example: true
+                      hasPrev:
+                        type: boolean
+                        example: false
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Gear"
+                        - type: object
+                          properties:
+                            category:
+                              $ref: "#/components/schemas/Category"
+                            provider:
+                              $ref: "#/components/schemas/ProviderSummary"
+
+  /api/gears/{id}:
+    get:
+      tags:
+        - Gear
+      summary: Get gear by ID
+      description: |
+        Retrieves detailed information about a specific gear item, including its category, provider, and customer reviews.
+      operationId: getGearById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique gear ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Gear retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Gear"
+                      - type: object
+                        properties:
+                          category:
+                            $ref: "#/components/schemas/Category"
+                          provider:
+                            $ref: "#/components/schemas/ProviderSummary"
+                          reviews:
+                            type: array
+                            items:
+                              $ref: "#/components/schemas/Review"
+
+    patch:
+      tags:
+        - Gear
+      summary: Update gear
+      description: |
+        Updates an existing gear.
+
+        **Authorization Required**
+
+        Only the gear owner (Provider) can update this gear.
+      operationId: updateGear
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique gear ID.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateGearRequest"
+            example:
+              name: "Black Diamond Half Dome Helmet Updated"
+              description: "Durable climbing helmet for mountaineering and rock climbing Updated."
+      responses:
+        "200":
+          description: Gear updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Gear"
+                      - type: object
+                        properties:
+                          category:
+                            $ref: "#/components/schemas/Category"
+                          provider:
+                            $ref: "#/components/schemas/ProviderSummary"
+
+    delete:
+      tags:
+        - Gear
+      summary: Delete gear
+      description: |
+        Deletes a gear.
+
+        **Authorization Required**
+
+        Only the gear owner (Provider) can delete this gear.
+
+        A gear cannot be deleted if it has rental history.
+      operationId: deleteGear
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Unique gear ID.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Gear deleted successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  statusCode:
+                    type: integer
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    nullable: true
+                    example: null
+        "400":
+          description: Gear cannot be deleted because it has rental history.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                success: false
+                statusCode: 400
+                message: "This gear cannot be deleted because it has rental history."
+                error:
+                  name: "AppError"
+
+  /api/rentals:
+    post:
+      tags:
+        - Rental
+      summary: Create rental order
+      description: |
+        Creates a new rental order for one or more gear items.
+
+        **Authorization Required**
+
+        Only authenticated customers can create rental orders.
+
+        The customer is automatically identified from the HTTP-only authentication cookie.
+
+        **Next Step**
+
+        After successfully creating a rental order, the customer should call the **Create Stripe Checkout Session** endpoint to generate a Stripe Checkout URL and complete the payment securely.
+
+        Endpoint:
+        `POST /api/payments/checkout-session/{rentalId}`
+      operationId: createRental
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateRentalRequest"
+            example:
+              startDate: "2026-07-11"
+              endDate: "2026-07-14"
+              items:
+                - gearItemId: "6325e342-7a02-4307-a49d-b2c73cd37aeb"
+                  quantity: 1
+                - gearItemId: "e3044fc1-f39d-4cad-88ca-1326aa6345a3"
+                  quantity: 1
+      responses:
+        "201":
+          description: Rental order created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 201
+                  message:
+                    type: string
+                    example: "Rental order created successfully."
+                  data:
+                    $ref: "#/components/schemas/Rental"
+
+  /api/rentals/{rentalId}/cancel:
+    patch:
+      tags:
+        - Rental
+      summary: Cancel Rental Order
+      description: |
+        Cancels a rental order before payment.
+
+        **Authorization Required**
+
+        Only authenticated customers can cancel their own rental orders.
+
+        Providers and administrators are not allowed to cancel customer rental orders.
+
+        The customer is automatically identified from the HTTP-only authentication cookie.
+
+        Only rental orders with **PLACED** status can be cancelled.
+      operationId: cancelRentalOrder
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: rentalId
+          in: path
+          required: true
+          description: Rental order ID.
+          schema:
+            type: string
+            example: "cmrgarh2400001gewj4phq3jz"
+      responses:
+        "200":
+          description: Rental cancelled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Rental cancelled successfully."
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Rental"
+                      - type: object
+                        properties:
+                          customer:
+                            $ref: "#/components/schemas/CustomerSummary"
+                          payment:
+                            type: object
+                            nullable: true
+                          items:
+                            type: array
+                            items:
+                              allOf:
+                                - $ref: "#/components/schemas/RentalItem"
+                                - type: object
+                                  properties:
+                                    gearItem:
+                                      $ref: "#/components/schemas/Gear"
+        "400":
+          description: Rental cannot be cancelled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  statusCode:
+                    type: integer
+                    example: 400
+                  message:
+                    type: string
+                    example: "Only placed rental orders can be cancelled."
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "AppError"
+
+  /api/rentals/my-rentals:
+    get:
+      tags:
+        - Rental
+
+      summary: Get my rental orders
+
+      description: |
+        Retrieves all rental orders created by the authenticated customer.
+
+        **Authorization Required**
+
+        Only authenticated customers can access this endpoint.
+
+        The customer is identified automatically from the HTTP-only authentication cookie.
+
+      operationId: getMyRentals
+
+      security:
+        - cookieAuth: []
+
+      responses:
+        '200':
+          description: Rental orders retrieved successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Rental orders retrieved successfully.
+
+                  data:
+                    type: array
+
+                    items:
+                      $ref: '#/components/schemas/Rental'
+
+        '401':
+          description: Unauthorized.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '403':
+          description: Forbidden. Only customers can access this endpoint.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/rentals/provider:
+    get:
+      tags:
+        - Rental
+      summary: Get Provider Rental Orders
+      description: |
+        Retrieves all rental orders that include gear items owned by the authenticated provider.
+
+        **Authorization Required**
+
+        Only authenticated providers can access this endpoint.
+
+        The provider is automatically identified from the HTTP-only authentication cookie.
+      operationId: getProviderRentalOrders
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Incoming rental orders retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Incoming rental orders retrieved successfully."
+                  data:
+                    type: array
+                    items:
+                      allOf:
+                        - $ref: "#/components/schemas/Rental"
+                        - type: object
+                          properties:
+                            customer:
+                              $ref: "#/components/schemas/CustomerSummaryRental"
+                            payment:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                amount:
+                                  type: number
+                                  format: float
+                                status:
+                                  type: string
+                                  enum:
+                                    - PENDING
+                                    - COMPLETED
+                                    - FAILED
+                                paidAt:
+                                  type: string
+                                  format: date-time
+                                  nullable: true
+                            items:
+                              type: array
+                              items:
+                                allOf:
+                                  - $ref: "#/components/schemas/RentalItem"
+                                  - type: object
+                                    properties:
+                                      gearItem:
+                                        $ref: "#/components/schemas/Gear"
+
+  /api/rentals/{rentalId}/confirm:
+    patch:
+      tags:
+        - Rental
+      summary: Confirm Rental Order
+      description: |
+        Confirms a paid rental order.
+
+        **Authorization Required**
+
+        Only Provider can confirm rental order.
+
+        This endpoint can only be used after the rental order has been paid.
+
+        Once confirmed, the rental status is updated to **CONFIRMED**.
+      operationId: confirmRentalOrder
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: rentalId
+          in: path
+          required: true
+          description: Rental order ID.
+          schema:
+            type: string
+            example: "cmrfzzm0k00001ggb8yu51ouh"
+      responses:
+        "200":
+          description: Rental order confirmed successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Rental order confirmed successfully."
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Rental"
+                      - type: object
+                        properties:
+                          customer:
+                            $ref: "#/components/schemas/CustomerSummaryRental"
+                          payment:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              amount:
+                                type: number
+                                format: float
+                              status:
+                                type: string
+                                enum:
+                                  - PENDING
+                                  - COMPLETED
+                                  - FAILED
+                              paidAt:
+                                type: string
+                                format: date-time
+                                nullable: true
+                          items:
+                            type: array
+                            items:
+                              allOf:
+                                - $ref: "#/components/schemas/RentalItem"
+                                - type: object
+                                  properties:
+                                    gearItem:
+                                      $ref: "#/components/schemas/Gear"
+
+  /api/rentals/{rentalId}/pick-up:
+    patch:
+      tags:
+        - Rental
+      summary: Mark Rental as Picked Up
+      description: |
+        Marks a confirmed rental order as picked up.
+
+        **Authorization Required**
+
+        Only authenticated providers can mark rental orders as picked up.
+
+        The provider is automatically identified from the HTTP-only authentication cookie.
+
+        This endpoint can only be used after the rental order has been confirmed.
+      operationId: markRentalAsPickedUp
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: rentalId
+          in: path
+          required: true
+          description: Rental order ID.
+          schema:
+            type: string
+            example: "cmrfzzm0k00001ggb8yu51ouh"
+      responses:
+        "200":
+          description: Rental marked as picked up successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Rental marked as picked up successfully."
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Rental"
+                      - type: object
+                        properties:
+                          customer:
+                            $ref: "#/components/schemas/CustomerSummaryRental"
+                          payment:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              amount:
+                                type: number
+                                format: float
+                              status:
+                                type: string
+                                enum:
+                                  - PENDING
+                                  - COMPLETED
+                                  - FAILED
+                              paidAt:
+                                type: string
+                                format: date-time
+                                nullable: true
+                          items:
+                            type: array
+                            items:
+                              allOf:
+                                - $ref: "#/components/schemas/RentalItem"
+                                - type: object
+                                  properties:
+                                    gearItem:
+                                      $ref: "#/components/schemas/Gear"
+
+  /api/rentals/{rentalId}/return:
+    patch:
+      tags:
+        - Rental
+      summary: Mark Rental as Returned
+      description: |
+        Marks a picked-up rental order as returned.
+
+        **Authorization Required**
+
+        Only authenticated providers can mark rental orders as returned.
+
+        The provider is automatically identified from the HTTP-only authentication cookie.
+
+        This endpoint can only be used after the rental order has been marked as **PICKED_UP**.
+
+        Returning a rental automatically updates the gear stock and makes the rented gear available for future rentals.
+      operationId: markRentalAsReturned
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: rentalId
+          in: path
+          required: true
+          description: Rental order ID.
+          schema:
+            type: string
+            example: "cmrfzzm0k00001ggb8yu51ouh"
+      responses:
+        "200":
+          description: Rental returned successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Rental returned successfully."
+                  data:
+                    allOf:
+                      - $ref: "#/components/schemas/Rental"
+                      - type: object
+                        properties:
+                          customer:
+                            $ref: "#/components/schemas/CustomerSummaryRental"
+                          payment:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                format: uuid
+                              amount:
+                                type: number
+                                format: float
+                              status:
+                                type: string
+                                enum:
+                                  - PENDING
+                                  - COMPLETED
+                                  - FAILED
+                              paidAt:
+                                type: string
+                                format: date-time
+                                nullable: true
+                          items:
+                            type: array
+                            items:
+                              allOf:
+                                - $ref: "#/components/schemas/RentalItem"
+                                - type: object
+                                  properties:
+                                    gearItem:
+                                      $ref: "#/components/schemas/Gear"
+
+  /api/payments/checkout-session/{rentalId}:
+    post:
+      tags:
+        - Payment
+      summary: Create Stripe Checkout Session
+      description: |
+        Creates a Stripe Checkout Session for a rental order.
+
+        **Authorization Required**
+
+        Only the authenticated customer who owns the rental order can create a checkout session.
+
+        Returns a Stripe-hosted checkout URL where the customer can securely complete the payment.
+      operationId: createCheckoutSession
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: rentalId
+          in: path
+          required: true
+          description: Rental order ID.
+          schema:
+            type: string
+            example: "cmrfzzm0k00001ggb8yu51ouh"
+      responses:
+        "200":
+          description: Checkout session created successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Checkout session created successfully."
+                  data:
+                    type: object
+                    properties:
+                      checkoutUrl:
+                        type: string
+                        format: uri
+                        example: "https://checkout.stripe.com/c/pay/cs_test_xxxxxxxxxxxxxxxxxxxxxxxxx"
+                      sessionId:
+                        type: string
+                        example: "cs_test_xxxxxxxxxxxxxxxxxxxxxxxxx"
+
+  /api/providers/dashboard:
+    get:
+      tags:
+        - Provider
+      summary: Get Provider Dashboard
+      description: |
+        Retrieves dashboard statistics for the authenticated provider.
+
+        **Authorization Required**
+
+        Only authenticated providers can access this endpoint.
+
+        The provider is automatically identified from the HTTP-only authentication cookie.
+
+        The dashboard includes gear statistics, rental statistics, and total revenue.
+      operationId: getProviderDashboard
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Provider dashboard retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Provider dashboard retrieved successfully."
+                  data:
+                    type: object
+                    properties:
+                      totalGears:
+                        type: integer
+                        example: 4
+                      availableGears:
+                        type: integer
+                        example: 4
+                      unavailableGears:
+                        type: integer
+                        example: 0
+                      placedRentals:
+                        type: integer
+                        example: 0
+                      paidRentals:
+                        type: integer
+                        example: 1
+                      confirmedRentals:
+                        type: integer
+                        example: 0
+                      pickedUpRentals:
+                        type: integer
+                        example: 0
+                      returnedRentals:
+                        type: integer
+                        example: 2
+                      cancelledRentals:
+                        type: integer
+                        example: 0
+                      totalRevenue:
+                        type: number
+                        format: float
+                        example: 320.0
+
+  /api/providers/rentals/history:
+    get:
+      tags:
+        - Provider
+      summary: Get Provider Rental History
+      description: |
+        Retrieves the complete rental history for the authenticated provider.
+
+        **Authorization Required**
+
+        Only authenticated providers can access this endpoint.
+
+        The provider is automatically identified from the HTTP-only authentication cookie.
+
+        Supports pagination.
+      operationId: getProviderRentalHistory
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Provider rental history retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Provider rental history retrieved successfully."
+                  meta:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+                      limit:
+                        type: integer
+                        example: 10
+                      total:
+                        type: integer
+                        example: 3
+                      totalPage:
+                        type: integer
+                        example: 1
+                      hasNext:
+                        type: boolean
+                        example: false
+                      hasPrev:
+                        type: boolean
+                        example: false
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rental'
+
+  /api/admin/dashboard:
+    get:
+      tags:
+        - Admin
+      summary: Get Admin Dashboard
+      description: |
+        Retrieves platform-wide statistics for the administrator dashboard.
+
+        **Authorization Required**
+
+        Only authenticated administrators can access this endpoint.
+
+        The administrator is automatically identified from the HTTP-only authentication cookie.
+      operationId: getAdminDashboard
+      security:
+        - cookieAuth: []
+      responses:
+        '200':
+          description: Admin dashboard retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  statusCode:
+                    type: integer
+                    example: 200
+                  message:
+                    type: string
+                    example: "Admin dashboard retrieved successfully."
+                  data:
+                    type: object
+                    properties:
+                      users:
+                        type: object
+                        properties:
+                          totalUsers:
+                            type: integer
+                            example: 5
+                          totalCustomers:
+                            type: integer
+                            example: 2
+                          totalProviders:
+                            type: integer
+                            example: 2
+                      categories:
+                        type: object
+                        properties:
+                          totalCategories:
+                            type: integer
+                            example: 5
+                      gears:
+                        type: object
+                        properties:
+                          totalGears:
+                            type: integer
+                            example: 4
+                          availableGears:
+                            type: integer
+                            example: 4
+                          unavailableGears:
+                            type: integer
+                            example: 0
+                      rentals:
+                        type: object
+                        properties:
+                          totalRentalOrders:
+                            type: integer
+                            example: 3
+                          placedRentals:
+                            type: integer
+                            example: 0
+                          paidRentals:
+                            type: integer
+                            example: 1
+                          confirmedRentals:
+                            type: integer
+                            example: 0
+                          pickedUpRentals:
+                            type: integer
+                            example: 0
+                          returnedRentals:
+                            type: integer
+                            example: 2
+                          cancelledRentals:
+                            type: integer
+                            example: 0
+                      payments:
+                        type: object
+                        properties:
+                          totalPayments:
+                            type: integer
+                            example: 3
+                          completedPayments:
+                            type: integer
+                            example: 3
+                          pendingPayments:
+                            type: integer
+                            example: 0
+                          failedPayments:
+                            type: integer
+                            example: 0
+                      revenue:
+                        type: object
+                        properties:
+                          totalRevenue:
+                            type: number
+                            format: float
+                            example: 320.0
+
+  /api/reviews:
+    post:
+      tags:
+        - Review
+
+      summary: Create a review
+
+      description: |
+        Creates a review for a rented gear item.
+
+        **Authorization Required**
+
+        Only authenticated customers can create reviews.
+
+        The customer is automatically identified from the HTTP-only authentication cookie.
+
+        **Rules**
+
+        - A review can only be created for a rental order that belongs to the authenticated customer.
+        - The rental order must have been returned.
+        - One review is allowed per customer for each rented gear item.
+
+      operationId: createReview
+
+      security:
+        - cookieAuth: []
+
+      requestBody:
+        required: true
+
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+
+      responses:
+        '201':
+          description: Review created successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 201
+
+                  message:
+                    type: string
+                    example: Review created successfully.
+
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Review'
+
+                      - type: object
+
+                        properties:
+                          customer:
+                            $ref: '#/components/schemas/CustomerSummary'
+
+                          gearItem:
+                            $ref: '#/components/schemas/GearReviewCreateSummary'
+                            
+
+        '400':
+          description: Invalid request or review already exists.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '401':
+          description: Unauthorized.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '403':
+          description: Forbidden. Only customers can create reviews.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '404':
+          description: Rental order or gear item not found.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  
+    get:
+      tags:
+        - Review
+
+      summary: Get all reviews
+
+      description: |
+        Retrieves all gear reviews with pagination, filtering, sorting,
+        customer information, and review statistics.
+
+      operationId: getAllReviews
+
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+
+        - name: rating
+          in: query
+          description: Filter by rating.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum:
+              - rating
+              - createdAt
+            default: createdAt
+
+        - name: sortOrder
+          in: query
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+
+      responses:
+        '200':
+          description: Reviews retrieved successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Reviews retrieved successfully.
+
+                  meta:
+                    type: object
+
+                    properties:
+                      page:
+                        type: integer
+                        example: 1
+
+                      limit:
+                        type: integer
+                        example: 10
+
+                      total:
+                        type: integer
+                        example: 1
+
+                      totalPage:
+                        type: integer
+                        example: 1
+
+                      hasNext:
+                        type: boolean
+                        example: false
+
+                      hasPrev:
+                        type: boolean
+                        example: false
+
+                  data:
+                    type: object
+
+                    properties:
+                      statistics:
+                        type: object
+
+                        properties:
+                          averageRating:
+                            type: number
+                            format: float
+                            example: 4
+
+                          totalReviews:
+                            type: integer
+                            example: 1
+
+                      reviews:
+                        type: array
+
+                        items:
+                          allOf:
+                            - $ref: '#/components/schemas/Review'
+
+                            - type: object
+
+                              properties:
+                                customer:
+                                  $ref: '#/components/schemas/CustomerSummary'
+
+                                gearItem:
+                                  $ref: '#/components/schemas/GearReviewSummary'
+
+        '500':
+          description: Internal server error.
+
+  /api/reviews/me:
+    get:
+      tags:
+        - Review
+
+      summary: Get my reviews
+
+      description: |
+        Retrieves the authenticated customer's review history.
+
+        **Authorization Required**
+
+        Only authenticated customers can access this endpoint.
+
+        The customer is automatically identified from the HTTP-only authentication cookie.
+
+      operationId: getMyReviews
+
+      security:
+        - cookieAuth: []
+
+      responses:
+        '200':
+          description: My reviews retrieved successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: My reviews retrieved successfully.
+
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+                  data:
+                    type: array
+
+                    items:
+                      type: object
+
+                      allOf:
+                        - $ref: '#/components/schemas/Review'
+
+                        - type: object
+
+                          properties:
+                            gearItem:
+                              $ref: '#/components/schemas/GearReviewSummary'
+
+        '401':
+          description: Unauthorized.
+
+        '403':
+          description: Only customers can access this resource.
+
+  /api/reviews/gear/{gearItemId}:
+    get:
+      tags:
+        - Review
+
+      summary: Get reviews for a specific gear
+
+      description: |
+        Retrieves all reviews for a specific gear item.
+
+        **Authentication**
+
+        This endpoint is public. No authentication is required.
+
+      operationId: getGearReviews
+
+      parameters:
+        - name: gearItemId
+          in: path
+          required: true
+          description: Unique gear item ID.
+          schema:
+            type: string
+            format: uuid
+
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 10
+            minimum: 1
+
+        - name: rating
+          in: query
+          description: Filter reviews by rating.
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 5
+
+        - name: sortBy
+          in: query
+          description: Sort reviews by field.
+          schema:
+            type: string
+            enum:
+              - rating
+              - createdAt
+
+        - name: sortOrder
+          in: query
+          description: Sort order.
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+
+      responses:
+        '200':
+          description: Reviews retrieved successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Reviews retrieved successfully.
+
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+
+                  data:
+                    type: array
+
+                    items:
+                      $ref: '#/components/schemas/Review'
+
+        '404':
+          description: Gear item not found.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/reviews/{id}:
+    patch:
+      tags:
+        - Review
+
+      summary: Update a review
+
+      description: |
+        Updates an existing review.
+
+        **Authorization Required**
+
+        Only the authenticated customer who created the review can update it.
+
+      operationId: updateReview
+
+      security:
+        - cookieAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Review ID.
+          schema:
+            type: string
+            format: uuid
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewRequest'
+
+      responses:
+        '200':
+          description: Review updated successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Review updated successfully.
+
+                  data:
+                    allOf:
+                      - $ref: '#/components/schemas/Review'
+
+                      - type: object
+                        properties:
+                          customer:
+                            $ref: '#/components/schemas/CustomerSummary'
+
+                          gearItem:
+                            $ref: '#/components/schemas/GearReviewGearSummary'
+
+        '400':
+          description: Invalid request.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '401':
+          description: Unauthorized.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '403':
+          description: Forbidden.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '404':
+          description: Review not found.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Review
+
+      summary: Delete review
+
+      description: |
+        Deletes an existing review.
+
+        **Authorization Required**
+
+        Only the authenticated customer who created the review can delete it.
+
+        A customer cannot delete another customer's review.
+
+      operationId: deleteReview
+
+      security:
+        - cookieAuth: []
+
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Review ID.
+          schema:
+            type: string
+            format: uuid
+
+      responses:
+        '200':
+          description: Review deleted successfully.
+
+          content:
+            application/json:
+              schema:
+                type: object
+
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+
+                  statusCode:
+                    type: integer
+                    example: 200
+
+                  message:
+                    type: string
+                    example: Review deleted successfully.
+
+                  data:
+                    type: "null"
+                    nullable: true
+                    example: null
+
+        '401':
+          description: Unauthorized.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '403':
+          description: Forbidden. Customer does not own this review.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+        '404':
+          description: Review not found.
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  
