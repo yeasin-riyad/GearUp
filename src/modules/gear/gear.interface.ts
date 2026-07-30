@@ -1,11 +1,14 @@
 export interface ICreateGear {
   name: string;
   description: string;
+  location: string;
 
   brand?: string;
-  image?: string;
+  images: string[];
+  features: string[];
 
   pricePerDay: number;
+  deposit: number;
   stock: number;
 
   categoryId: string;
@@ -14,24 +17,14 @@ export interface ICreateGear {
 export interface IUpdateGear {
   name?: string;
   description?: string;
+  location?: string;
 
   brand?: string;
-  image?: string;
+  images?: string[];
+  features?: string[];
 
   pricePerDay?: number;
-  stock?: number;
-
-  categoryId?: string;
-}
-
-export interface IUpdateGear {
-  name?: string;
-  description?: string;
-
-  brand?: string;
-  image?: string;
-
-  pricePerDay?: number;
+  deposit?: number;
   stock?: number;
 
   categoryId?: string;

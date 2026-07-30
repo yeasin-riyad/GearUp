@@ -4,12 +4,15 @@ model GearItem {
   // Basic Information
   name        String
   description String
+  location String
 
-  brand String?
-  image String?
+  brand  String?
+  images String[] // Changed from `image String?` to `images String[]`
+  features String[]
 
   // Rental Information
   pricePerDay Float
+  deposit Float
   stock       Int
 
   availability GearAvailability @default(AVAILABLE)
@@ -23,6 +26,7 @@ model GearItem {
 
   rentalItems RentalOrderItem[]
   reviews     Review[]
+
 
   // Audit Fields
   createdAt DateTime @default(now())
