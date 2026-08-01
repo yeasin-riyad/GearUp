@@ -4,7 +4,7 @@ export interface ICreateGear {
   location: string;
 
   brand?: string;
-  images: string[];
+  images?: string[];
   features: string[];
 
   pricePerDay: number;

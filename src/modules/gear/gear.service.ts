@@ -57,6 +57,7 @@ const createGear = async (userId: string, payload: ICreateGear) => {
 };
 
 const getAllGears = async (query: Record<string, unknown>) => {
+  // console.log(query,"MotherFucker..")
   const builder = new QueryBuilder<Prisma.GearItemWhereInput>(query);
 
   const options = builder
@@ -66,6 +67,7 @@ const getAllGears = async (query: Record<string, unknown>) => {
     .paginate()
     .build();
 
+    // console.log(options.where);
   const gears = await prisma.gearItem.findMany({
     ...options,
 
@@ -81,6 +83,8 @@ const getAllGears = async (query: Record<string, unknown>) => {
       },
     },
   });
+
+  // console.log(gears,"Filtering")
 
   const total = await prisma.gearItem.count({
     where: options.where,

@@ -32,7 +32,7 @@ export const getAllGearReviews = async (
           select: {
             id: true,
             name: true,
-            image: true,
+            images: true,
           },
         },
       },

@@ -24,7 +24,7 @@ export const gearSelectableFields = [
   "name",
   "description",
   "brand",
-  "image",
+  "images",
   "pricePerDay",
   "stock",
   "availability",

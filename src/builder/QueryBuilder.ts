@@ -9,6 +9,7 @@ class QueryBuilder<TWhere = Record<string, any>> {
 
   constructor(private readonly query: Record<string, unknown>) {}
 
+  
   /**
    * Search
    */
@@ -28,96 +29,109 @@ class QueryBuilder<TWhere = Record<string, any>> {
 
     return this;
   }
-  
 
   /**
    * Exact Filtering
    */
-filter(filterableFields: string[]) {
-  const filters: Record<string, any> = {};
+  filter(filterableFields: string[]) {
+    const filters: Record<string, any> = {};
 
-  Object.keys(this.query).forEach((key) => {
-    if (!filterableFields.includes(key)) {
-      return;
+    Object.keys(this.query).forEach((key) => {
+      if (!filterableFields.includes(key)) {
+        return;
+      }
+
+      const value = this.query[key];
+
+      // Skip empty values
+      if (value === undefined || value === null || value === "") {
+        return;
+      }
+
+      /**
+       * Range Filter
+       *
+       * pricePerDay[gte]=100
+       * pricePerDay[lte]=500
+       */
+      if (typeof value === "object" && !Array.isArray(value)) {
+        const operators: Record<string, any> = {};
+
+        Object.entries(value as Record<string, unknown>).forEach(
+          ([operator, operatorValue]) => {
+            switch (operator) {
+              case "gte":
+                operators.gte = Number(operatorValue);
+                break;
+
+              case "gt":
+                operators.gt = Number(operatorValue);
+                break;
+
+              case "lte":
+                operators.lte = Number(operatorValue);
+                break;
+
+              case "lt":
+                operators.lt = Number(operatorValue);
+                break;
+            }
+          },
+        );
+
+        filters[key] = operators;
+
+        return;
+      }
+
+      /**
+       * Boolean Parser
+       */
+      if (value === "true") {
+        filters[key] = true;
+        return;
+      }
+
+      if (value === "false") {
+        filters[key] = false;
+        return;
+      }
+
+      /**
+       * Number Parser
+       */
+      if (!isNaN(Number(value))) {
+        filters[key] = Number(value);
+        return;
+      }
+
+      /**
+       * Default
+       */
+      filters[key] = value;
+    });
+
+    // Price Range Filter
+    // Price Range Filter
+    const minPrice = Number(this.query.minPrice);
+    const maxPrice = Number(this.query.maxPrice);
+    // console.log(minPrice,maxPrice,"Pricing..")
+
+    if (!isNaN(minPrice) || !isNaN(maxPrice)) {
+      filters.pricePerDay = {};
+
+      if (!isNaN(minPrice)) {
+        filters.pricePerDay.gte = minPrice;
+      }
+
+      if (!isNaN(maxPrice)) {
+        filters.pricePerDay.lte = maxPrice;
+      }
     }
+    Object.assign(this.where, filters);
 
-    const value = this.query[key];
-
-    // Skip empty values
-    if (value === undefined || value === null || value === "") {
-      return;
-    }
-
-    /**
-     * Range Filter
-     *
-     * pricePerDay[gte]=100
-     * pricePerDay[lte]=500
-     */
-    if (
-      typeof value === "object" &&
-      !Array.isArray(value)
-    ) {
-      const operators: Record<string, any> = {};
-
-      Object.entries(value as Record<string, unknown>).forEach(
-        ([operator, operatorValue]) => {
-          switch (operator) {
-            case "gte":
-              operators.gte = Number(operatorValue);
-              break;
-
-            case "gt":
-              operators.gt = Number(operatorValue);
-              break;
-
-            case "lte":
-              operators.lte = Number(operatorValue);
-              break;
-
-            case "lt":
-              operators.lt = Number(operatorValue);
-              break;
-          }
-        }
-      );
-
-      filters[key] = operators;
-
-      return;
-    }
-
-    /**
-     * Boolean Parser
-     */
-    if (value === "true") {
-      filters[key] = true;
-      return;
-    }
-
-    if (value === "false") {
-      filters[key] = false;
-      return;
-    }
-
-    /**
-     * Number Parser
-     */
-    if (!isNaN(Number(value))) {
-      filters[key] = Number(value);
-      return;
-    }
-
-    /**
-     * Default
-     */
-    filters[key] = value;
-  });
-
-  Object.assign(this.where, filters);
-
-  return this;
-}
+    return this;
+  }
 
   /**
    * Sorting
@@ -125,8 +139,7 @@ filter(filterableFields: string[]) {
   sort(allowedFields: string[], defaultField = "createdAt") {
     let sortBy = (this.query.sortBy as string) || defaultField;
 
-    const sortOrder =
-      (this.query.sortOrder as "asc" | "desc") || "desc";
+    const sortOrder = (this.query.sortOrder as "asc" | "desc") || "desc";
 
     if (!allowedFields.includes(sortBy)) {
       sortBy = defaultField;
@@ -150,9 +163,7 @@ filter(filterableFields: string[]) {
     this.page = !isNaN(page) && page > 0 ? page : 1;
 
     this.limit =
-      !isNaN(limit) && limit > 0
-        ? Math.min(limit, maxLimit)
-        : defaultLimit;
+      !isNaN(limit) && limit > 0 ? Math.min(limit, maxLimit) : defaultLimit;
 
     this.skip = (this.page - 1) * this.limit;
 

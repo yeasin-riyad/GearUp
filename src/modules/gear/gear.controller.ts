@@ -23,6 +23,8 @@ const getAllGears = catchAsync(async (req, res) => {
     req.query
   );
 
+
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
