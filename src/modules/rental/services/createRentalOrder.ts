@@ -145,11 +145,11 @@ if (providerIds.size > 1) {
       );
     }
 
-     await validateRentalAvailability(
-    gear.id,
-    rentalStartDate,
-    rentalEndDate
-  );
+  //    await validateRentalAvailability(
+  //   gear.id,
+  //   rentalStartDate,
+  //   rentalEndDate
+  // );
 
     if (item.quantity < 1) {
       throw new AppError(
