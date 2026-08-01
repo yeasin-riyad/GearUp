@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import { ICreateRentalOrder } from "../rental.interface.js";
 import AppError from "../../../errors/AppError.js";
 import { prisma } from "../../../lib/prisma.js";
-import { validateRentalAvailability } from "../utils/validateRentalAvailability.js";
+// import { validateRentalAvailability } from "../utils/validateRentalAvailability.js";
 
 
 export const createRentalOrder = async (
