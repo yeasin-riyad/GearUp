@@ -145,7 +145,7 @@ for (const item of order.items) {
 
     line_items: order.items.map((item) => ({
       price_data: {
-        currency: "bdt",
+        currency: "usd",
 
         product_data: {
           name: item.gearItem.name,
