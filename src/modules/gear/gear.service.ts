@@ -177,15 +177,26 @@ const updateGear = async (
     throw new AppError(httpStatus.NOT_FOUND, "Gear not found.");
   }
 
-  /**
-   * Authorization
-   */
-  if (gear.providerId !== userId) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      "You are not authorized to update this gear.",
-    );
-  }
+ const user = await prisma.user.findUnique({
+   where: {
+     id: userId,
+   },
+   select: {
+     role: true,
+   },
+ });
+
+ if (!user) {
+   throw new AppError(httpStatus.NOT_FOUND, "User not found.");
+ }
+
+ // Provider or Admin can update
+ if (gear.providerId !== userId && user.role !== "ADMIN") {
+   throw new AppError(
+     httpStatus.FORBIDDEN,
+     "You are not authorized to update this gear.",
+   );
+ }
 
   /**
    * Category Validation
@@ -264,8 +275,21 @@ const deleteGear = async (gearId: string, userId: string) => {
     throw new AppError(httpStatus.NOT_FOUND, "Gear not found.");
   }
 
-  // Authorization
-  if (gear.providerId !== userId) {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      role: true,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, "User not found.");
+  }
+
+  // Provider or Admin can delete
+  if (gear.providerId !== userId && user.role !== "ADMIN") {
     throw new AppError(
       httpStatus.FORBIDDEN,
       "You are not authorized to delete this gear.",
