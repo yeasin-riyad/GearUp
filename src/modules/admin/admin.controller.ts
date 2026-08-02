@@ -16,6 +16,34 @@ const getDashboard = catchAsync(async (req, res) => {
   });
 });
 
+
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await adminService.getAllUsers(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "Users retrieved successfully.",
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
+const updateUserStatus = catchAsync(async (req, res) => {
+  const result = await adminService.updateUserStatus(
+    req.params.id as string,
+    req.body.status,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: 200,
+    message: "User status updated successfully.",
+    data: result,
+  });
+});
 export const adminController = {
   getDashboard,
+  getAllUsers,
+  updateUserStatus
 };

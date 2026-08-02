@@ -13,4 +13,12 @@ router.get(
   adminController.getDashboard
 );
 
+router.get("/all-users", auth(UserRole.ADMIN), adminController.getAllUsers);
+
+router.patch(
+  "/:id/status",
+  auth(UserRole.ADMIN),
+  adminController.updateUserStatus,
+);
+
 export const adminRoutes = router;

@@ -57,7 +57,6 @@ const createGear = async (userId: string, payload: ICreateGear) => {
 };
 
 const getAllGears = async (query: Record<string, unknown>) => {
-  // console.log(query,"MotherFucker..")
   const builder = new QueryBuilder<Prisma.GearItemWhereInput>(query);
 
   const options = builder
