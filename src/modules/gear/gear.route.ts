@@ -23,14 +23,14 @@ router.get(
 
 router.patch(
   "/:id",
-  auth(UserRole.PROVIDER),
+  auth(UserRole.PROVIDER,UserRole.ADMIN),
   gearController.updateGear
 );
 
 
 router.delete(
   "/:id",
-  auth(UserRole.PROVIDER),
+  auth(UserRole.PROVIDER,UserRole.ADMIN),
   gearController.deleteGear
 );
 export const gearRoutes = router;
