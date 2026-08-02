@@ -81,6 +81,11 @@ const getAllGears = async (query: Record<string, unknown>) => {
           avatar: true,
         },
       },
+      _count: {
+        select: {
+          reviews: true,
+        },
+      },
     },
   });
 
@@ -90,9 +95,28 @@ const getAllGears = async (query: Record<string, unknown>) => {
     where: options.where,
   });
 
+  const data = await Promise.all(
+    gears.map(async (gear) => {
+      const rating = await prisma.review.aggregate({
+        where: {
+          gearItemId: gear.id,
+        },
+        _avg: {
+          rating: true,
+        },
+      });
+
+      return {
+        ...gear,
+        reviewCount: gear._count.reviews,
+        averageRating: rating._avg.rating ?? 0,
+      };
+    }),
+  );
+
   return {
     meta: builder.getMeta(total),
-    data: gears,
+    data,
   };
 };
 
