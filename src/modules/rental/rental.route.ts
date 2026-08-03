@@ -3,50 +3,51 @@ import { UserRole } from "@prisma/client";
 import auth from "../../middlewares/auth.js";
 import { rentalController } from "./rental.controller.js";
 
-const router=Router()
+const router = Router();
 
-router.post(
-  "/",
-  auth(UserRole.CUSTOMER),
-  rentalController.createRentalOrder
-);
-
+router.post("/", auth(UserRole.CUSTOMER), rentalController.createRentalOrder);
 
 // get user rentals
 router.get(
   "/my-rentals",
   auth(UserRole.CUSTOMER),
-  rentalController.getMyRentals
+  rentalController.getMyRentals,
 );
 
 router.get(
   "/provider",
   auth(UserRole.PROVIDER),
-  rentalController.getIncomingRentals
+  rentalController.getIncomingRentals,
+);
+
+router.get(
+  "/get-all-rentals",
+  auth(UserRole.ADMIN),
+  rentalController.getAllIncomingRentals,
 );
 
 router.patch(
   "/:id/confirm",
   auth(UserRole.PROVIDER),
-  rentalController.confirmRental
+  rentalController.confirmRental,
 );
 
 router.patch(
   "/:id/pick-up",
   auth(UserRole.PROVIDER),
-  rentalController.pickupRental
+  rentalController.pickupRental,
 );
 
 router.patch(
   "/:id/return",
   auth(UserRole.PROVIDER),
-  rentalController.returnRental
+  rentalController.returnRental,
 );
 
 router.patch(
   "/:id/cancel",
   auth(UserRole.CUSTOMER),
-  rentalController.cancelRental
+  rentalController.cancelRental,
 );
 
-export const rentalRoutes=router;
+export const rentalRoutes = router;
