@@ -28,19 +28,19 @@ router.get(
 
 router.patch(
   "/:id/confirm",
-  auth(UserRole.PROVIDER),
+  auth(UserRole.PROVIDER,UserRole.ADMIN),
   rentalController.confirmRental,
 );
 
 router.patch(
   "/:id/pick-up",
-  auth(UserRole.PROVIDER),
+  auth(UserRole.PROVIDER,UserRole.ADMIN),
   rentalController.pickupRental,
 );
 
 router.patch(
   "/:id/return",
-  auth(UserRole.PROVIDER),
+  auth(UserRole.PROVIDER,UserRole.ADMIN),
   rentalController.returnRental,
 );
 
