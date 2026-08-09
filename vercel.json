@@ -1,8 +1,16 @@
 {
+  "version": 2,
+  "buildCommand": "npm run build",
+  "functions": {
+    "dist/app.js": {
+      "runtime": "nodejs22.x"
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/api/index.ts"
+      "destination": "/dist/app.js"
     }
   ]
 }
+
