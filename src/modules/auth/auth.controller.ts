@@ -66,9 +66,8 @@ const refreshToken = catchAsync(async (req, res) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: config.node_env === "production",
-    sameSite: "lax",
-    maxAge : 1000 * 60 * 60 * 24 // 24 hour or 1 day
-
+    sameSite: config.node_env === "production" ? "none" : "lax",
+    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
   });
 
   sendResponse(res, {
