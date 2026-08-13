@@ -19,7 +19,11 @@ const app : Application = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", config.client_url],
+    origin: [
+      "https://gear-up-frontend-kappa.vercel.app",
+      "http://localhost:3000",
+      ...(config.client_url ? [config.client_url] : []),
+    ],
     credentials: true,
   }),
 );
