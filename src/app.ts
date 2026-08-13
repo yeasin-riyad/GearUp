@@ -19,11 +19,7 @@ const app : Application = express();
 
 app.use(
   cors({
-    origin: [
-      "https://gearup-1-9p45.onrender.com",
-      "http://localhost:3000",
-      ...(config.client_url ? [config.client_url] : []),
-    ],
+    origin: ["http://localhost:3000", config.client_url],
     credentials: true,
   }),
 );
