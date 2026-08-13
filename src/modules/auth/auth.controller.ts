@@ -7,6 +7,11 @@ import { catchAsync } from "../../utils/catchAsync.js";
 import AppError from "../../errors/AppError.js";
 import config from "../../config/index.js";
 
+const cookieOptions: import("express").CookieOptions = {
+  httpOnly: true,
+  secure: config.node_env === "production",
+  sameSite: config.node_env === "production" ? "none" : "lax",
+};
 
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerUserIntoDB(req.body);
@@ -19,24 +24,19 @@ const registerUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
-
 const loginUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.loginUser(req.body);
 
   const { accessToken, refreshToken } = result;
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: config.node_env === "production" ? "none" : "lax",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 day
+    ...cookieOptions,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: config.node_env === "production" ? "none" : "lax",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+    ...cookieOptions,
+    maxAge: 1000 * 60 * 60 * 24,
   });
 
   sendResponse(res, {
@@ -45,29 +45,23 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     message: "Login successful",
     data: {
       accessToken,
-      refreshToken
+      refreshToken,
     },
   });
 });
-
 
 const refreshToken = catchAsync(async (req, res) => {
   const token = req.cookies.refreshToken;
 
   if (!token) {
-    throw new AppError(
-      httpStatus.UNAUTHORIZED,
-      "Refresh token is required."
-    );
+    throw new AppError(httpStatus.UNAUTHORIZED, "Refresh token is required.");
   }
 
   const accessToken = await authService.refreshToken(token);
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: config.node_env === "production" ? "none" : "lax",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+    ...cookieOptions,
+    maxAge: 1000 * 60 * 60 * 24,
   });
 
   sendResponse(res, {
@@ -78,19 +72,9 @@ const refreshToken = catchAsync(async (req, res) => {
   });
 });
 
-
 const logoutUser = catchAsync(async (req, res) => {
-  res.clearCookie("accessToken", {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: "lax",
-  });
-
-  res.clearCookie("refreshToken", {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: "lax",
-  });
+  res.clearCookie("accessToken", cookieOptions);
+  res.clearCookie("refreshToken", cookieOptions);
 
   sendResponse(res, {
     success: true,
@@ -101,29 +85,24 @@ const logoutUser = catchAsync(async (req, res) => {
 });
 
 const googleLogin = catchAsync(async (req: Request, res: Response) => {
-  const payload = req.body;
-
-  const result = await authService.googleLogin(payload);
+  const result = await authService.googleLogin(req.body);
 
   const { accessToken, refreshToken } = result;
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: config.node_env === "production" ? "none" : "lax",
-    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
+    ...cookieOptions,
+    maxAge: 1000 * 60 * 60 * 24,
   });
+
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: config.node_env === "production",
-    sameSite: config.node_env === "production" ? "none" : "lax",
-    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    ...cookieOptions,
+    maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: "New tokens generated successfully",
+    message: "Google login successful",
     data: {
       accessToken,
       refreshToken,
@@ -132,24 +111,18 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getMe = catchAsync(async (req, res) => {
-    const result = await authService.getMe(req.user.userId);
+  const result = await authService.getMe(req.user.userId);
 
-    sendResponse(res,{
-        success:true,
-        statusCode:httpStatus.OK,
-        message:"Profile retrieved successfully",
-        data:result
-    })
-})
-
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Profile retrieved successfully",
+    data: result,
+  });
+});
 
 const updateProfile = catchAsync(async (req, res) => {
-  // console.log(req.user.userId);
-  // console.log(req.body);
-  const result = await authService.updateProfile(
-    req.user.userId,
-    req.body
-  );
+  const result = await authService.updateProfile(req.user.userId, req.body);
 
   sendResponse(res, {
     success: true,
@@ -159,12 +132,8 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 });
 
-
 const changePassword = catchAsync(async (req, res) => {
-  await authService.changePassword(
-    req.user.userId,
-    req.body
-  );
+  await authService.changePassword(req.user.userId, req.body);
 
   sendResponse(res, {
     success: true,
@@ -173,6 +142,7 @@ const changePassword = catchAsync(async (req, res) => {
     data: null,
   });
 });
+
 export const authController = {
   registerUser,
   loginUser,
@@ -181,5 +151,5 @@ export const authController = {
   getMe,
   updateProfile,
   changePassword,
-  googleLogin
+  googleLogin,
 };
