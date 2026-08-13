@@ -21,10 +21,11 @@ app.use(
   cors({
     origin: [
       "https://gearup-1-9p45.onrender.com",
+      "http://localhost:3000",
       ...(config.client_url ? [config.client_url] : []),
     ],
     credentials: true,
-  })
+  }),
 );
 
 app.use(

@@ -11,8 +11,8 @@ export type IUser = {
 };
 
 export interface ILoginUser {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export interface IChangePassword {
@@ -24,13 +24,16 @@ export interface IUpdateProfile {
   name?: string;
   phone?: string;
   avatar?: string;
-  address?:string;
-  city?:string
+  address?: string;
+  city?: string;
 }
-
 
 export interface TJwtPayload extends JwtPayload {
   userId: string;
   email: string;
   role: UserRole;
+}
+
+export interface IGoogleLoginPayload {
+  idToken: string;
 }

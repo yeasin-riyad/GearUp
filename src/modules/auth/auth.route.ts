@@ -34,4 +34,7 @@ router.patch(
   authController.changePassword
 );
 
+router.post("/google", authController.googleLogin);
+
+
 export const authRoutes = router;
