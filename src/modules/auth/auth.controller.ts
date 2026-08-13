@@ -7,6 +7,7 @@ import { catchAsync } from "../../utils/catchAsync.js";
 import AppError from "../../errors/AppError.js";
 import config from "../../config/index.js";
 
+
 const registerUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authService.registerUserIntoDB(req.body);
 
@@ -27,17 +28,15 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: config.node_env === "production",
-    sameSite: "lax",
-    maxAge : 1000 * 60 * 60 * 24 * 7 // 7 day
-
+    sameSite: config.node_env === "production" ? "none" : "lax",
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 day
   });
 
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: config.node_env === "production",
-    sameSite: "lax",
-    maxAge : 1000 * 60 * 60 * 24 // 24 hour or 1 day
-
+    sameSite: config.node_env === "production" ? "none" : "lax",
+    maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
   });
 
   sendResponse(res, {
@@ -112,13 +111,13 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
   res.cookie("accessToken", accessToken, {
     httpOnly: true,
     secure: config.node_env === "production",
-    sameSite: "lax",
+    sameSite: config.node_env === "production" ? "none" : "lax",
     maxAge: 1000 * 60 * 60 * 24, // 24 hour or 1 day
   });
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: config.node_env === "production",
-    sameSite: "lax",
+    sameSite: config.node_env === "production" ? "none" : "lax",
     maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
   });
 
