@@ -90,16 +90,12 @@ const googleLogin = catchAsync(async (req: Request, res: Response) => {
   const { accessToken, refreshToken } = result;
 
   res.cookie("accessToken", accessToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: config.node_env ==="none",
+    ...cookieOptions,
     maxAge: 1000 * 60 * 60 * 24,
   });
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite:"none",
+    ...cookieOptions,
     maxAge: 1000 * 60 * 60 * 24 * 7,
   });
 
